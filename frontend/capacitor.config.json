@@ -1,0 +1,9 @@
+{
+  "appId": "com.cravecart.app",
+  "appName": "CraveCart",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "http",
+    "cleartext": true
+  }
+}

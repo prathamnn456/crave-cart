@@ -6,37 +6,58 @@
 }
 
 .navbar .logo {
-    width: 150px;
+    width: 190px;
 }
 
 .navbar-menu {
     display: flex;
     list-style: none;
     gap: 20px;
-    color: #49557E;
+    color: var(--ink-2);
     font-size: 18px;
 }
 
 .navbar-menu .active {
     padding-bottom: 2px;
-    border-bottom: 2px solid #49557E;
+    border-bottom: 2px solid var(--accent);
+    color: var(--ink);
 }
 
 .navbar-right {
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: 30px;
 }
+
+.navbar-theme-toggle {
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--ink-2);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: .2s;
+}
+.navbar-theme-toggle svg { width: 18px; height: 18px; }
+.navbar-theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
 
 .navbar-search-icon{
 position: relative;
+background: none;
+border: none;
+padding: 0;
+cursor: pointer;
+display: inline-flex;
 }
 
 .navbar-search-icon .dot{
     position: absolute;
     min-width: 10px;
     min-height: 10px;
-    background-color: #FF4C24;
+    background-color: var(--accent);
     border-radius: 5px;
     top: -8px;
     right: -8px;
@@ -45,8 +66,8 @@ position: relative;
 .navbar-right button {
     background: transparent;
     font-size: 16px;
-    color: #49557E;
-    border: 1px solid #FF4C24;
+    color: var(--ink-2);
+    border: 1px solid var(--accent);
     padding: 10px 30px;
     border-radius: 50px;
     cursor: pointer;
@@ -54,7 +75,15 @@ position: relative;
 }
 
 .navbar-right button:hover {
-    background: #fff4f2;
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+
+/* keep dark PNG icons visible on dark ground */
+:root[data-theme="dark"] .navbar-right > img,
+:root[data-theme="dark"] .navbar-search-icon img,
+:root[data-theme="dark"] .navbar-profile > img {
+    filter: brightness(0) invert(0.82);
 }
 
 .navbar-profile{
@@ -77,17 +106,18 @@ position: relative;
     width: 20px;
 }
 .navbar-profile-dropdown li:hover{
-    color: #FF4C24;
+    color: var(--accent);
 }
 .navbar-profile:hover .navbar-profile-dropdown{
     display: flex;
     flex-direction: column;
     gap: 10px;
-    background-color: #fff2ef;
+    background-color: var(--surface);
+    color: var(--ink);
     padding: 12px 25px;
-    border-radius: 4px;
-    border: 1px solid tomato;
-    outline: 2px solid white;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    box-shadow: var(--shadow);
     list-style: none;
 }
 .navbar-profile hr{
@@ -97,7 +127,7 @@ position: relative;
 }
 @media (max-width:1050px) {
     .navbar .logo {
-        width: 140px;
+        width: 175px;
     }
 
     .navbar-menu {
@@ -120,7 +150,7 @@ position: relative;
 
 @media (max-width:900px) {
     .navbar .logo {
-        width: 120px;
+        width: 150px;
     }
 
     .navbar-menu {

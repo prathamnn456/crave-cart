@@ -1,0 +1,25 @@
+.features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 56px;
+}
+.feature {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+}
+.feature-ic {
+    width: 48px; height: 48px; border-radius: 13px;
+    background: var(--accent-soft); color: var(--accent);
+    display: grid; place-items: center; margin-bottom: 14px;
+}
+.feature-ic svg { width: 24px; height: 24px; }
+.feature b { font-size: 17px; color: var(--ink); }
+.feature p { color: var(--ink-2); font-size: 14px; margin-top: 5px; }
+
+@media (max-width: 900px) {
+    .features { grid-template-columns: 1fr; }
+}

@@ -1,31 +1,121 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
-*{
+
+:root {
+  --accent: #FF5A2C;
+  --accent-2: #FF8A3D;
+  --accent-hover: #ef4d21;
+  --accent-soft: #FFE9DF;
+  --ground: #FAF7F4;
+  --surface: #FFFFFF;
+  --surface-2: #F4EEE9;
+  --border: #ECE3DC;
+  --ink: #26201C;
+  --ink-2: #6F6459;
+  --ink-3: #9C9186;
+  --good: #1B9E6A;
+  --good-soft: #E1F4EC;
+  --warn: #E08A00;
+  --warn-soft: #FBEDD6;
+  --info: #4B6FE0;
+  --info-soft: #E6EBFB;
+  --shadow: 0 1px 2px rgba(38,32,28,.04), 0 8px 24px -12px rgba(38,32,28,.12);
+  --radius: 14px;
+}
+
+:root[data-theme="dark"] {
+  --accent-soft: #3A2013;
+  --ground: #16110D;
+  --surface: #1F1813;
+  --surface-2: #271F18;
+  --border: #352A22;
+  --ink: #F5EFE8;
+  --ink-2: #B6A99C;
+  --ink-3: #7E7365;
+  --good-soft: #14281F;
+  --warn-soft: #2E2310;
+  --info-soft: #1A1F33;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -12px rgba(0,0,0,.6);
+}
+
+* {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  font-family: Outfit;
+  font-family: Outfit, "Segoe UI", system-ui, sans-serif;
 }
-body{
+
+body {
   min-height: 100vh;
-  background-color: #FCFCFC;
+  background-color: var(--ground);
+  color: var(--ink);
+  transition: background-color .2s ease, color .2s ease;
 }
-a{
-  text-decoration: none;
-  color: inherit;
-}
-hr{
-  border: none;
-  height: 1px;
-  background-color: #A9A9A9;
-}
-.app-content{
-  display: flex;
-}
-.flex-col{
+
+a { text-decoration: none; color: inherit; }
+.tnum { font-variant-numeric: tabular-nums; }
+
+.flex-col {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-.cursor{
-  cursor: pointer;
+.cursor { cursor: pointer; }
+
+/* ---------- App shell ---------- */
+.app-shell {
+  display: grid;
+  grid-template-columns: 244px 1fr;
+  min-height: 100vh;
+}
+.main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.content {
+  padding: 28px;
+  width: 100%;
+  max-width: 1200px;
+}
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+.page-head h1 { font-size: 24px; letter-spacing: -.5px; }
+.page-head .sub { margin-top: 4px; color: var(--ink-2); font-size: 13.5px; }
+
+/* shared card */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* status pills (shared) */
+.pill {
+  font-size: 11.5px; font-weight: 600;
+  padding: 4px 10px; border-radius: 999px; white-space: nowrap;
+  display: inline-block;
+}
+.pill.good { background: var(--good-soft); color: var(--good); }
+.pill.warn { background: var(--warn-soft); color: var(--warn); }
+.pill.info { background: var(--info-soft); color: var(--info); }
+
+/* primary button */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 16px; border-radius: 10px;
+  background: var(--accent); color: #fff; border: none;
+  font-weight: 600; font-size: 13.5px; cursor: pointer; font-family: inherit;
+}
+.btn:hover { background: var(--accent-hover); }
+.btn.ghost { background: var(--surface); color: var(--ink); border: 1px solid var(--border); }
+.btn.ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+@media (max-width: 860px) {
+  .app-shell { grid-template-columns: 1fr; }
 }

@@ -36,27 +36,33 @@ const List = () => {
   }, [])
 
   return (
-    <div className='list add flex-col'>
-      <p>All Foods List</p>
-      <div className='list-table'>
-        <div className="list-table-format title">
-          <b>Image</b>
-          <b>Name</b>
-          <b>Category</b>
-          <b>Price</b>
-          <b>Action</b>
+    <div className='list'>
+      <div className="page-head">
+        <div>
+          <h1>Menu</h1>
+          <div className="sub">{list.length} item{list.length === 1 ? '' : 's'} live on CraveCart.</div>
         </div>
-        {list.map((item, index) => {
-          return (
-            <div key={index} className='list-table-format'>
-              <img src={`${url}/images/` + item.image} alt="" />
-              <p>{item.name}</p>
-              <p>{item.category}</p>
-              <p>{currency}{item.price}</p>
-              <p className='cursor' onClick={() => removeFood(item._id)}>x</p>
+      </div>
+
+      <div className='menu-grid'>
+        {list.map((item, index) => (
+          <div key={index} className='food-card'>
+            <div className='food-thumb'>
+              <img src={`${url}/images/` + item.image} alt={item.name} />
+              <button className='food-remove' title='Remove item' onClick={() => removeFood(item._id)}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" /></svg>
+              </button>
             </div>
-          )
-        })}
+            <div className='food-body'>
+              <div className='food-row1'>
+                <b>{item.name}</b>
+                <span className='food-price tnum'>{currency}{item.price}</span>
+              </div>
+              <p className='food-desc'>{item.description}</p>
+              <span className='food-cat'>{item.category}</span>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   )

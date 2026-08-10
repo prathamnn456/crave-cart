@@ -1,35 +1,92 @@
-.add{
-    width: 70%;
-    margin-left: max(5vw,25px);
-    margin-top: 50px;
-    color: #6D6D6D;
-    font-size: 16px;
+.add-form {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
-.add form{
-   gap: 20px;
+
+.add-field { display: flex; flex-direction: column; }
+.add-field label { font-size: 13px; font-weight: 600; margin-bottom: 7px; color: var(--ink); }
+.add-field input,
+.add-field textarea,
+.add-field select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 13.5px;
 }
-.add-img-upload img{
-    width: 120px;
+.add-field textarea { min-height: 92px; resize: vertical; }
+.add-field input:focus,
+.add-field textarea:focus,
+.add-field select:focus {
+  outline: 2px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  border-color: var(--accent);
 }
-.add-product-name, .add-product-description{
-    width: max(40%,280px);
+
+.add-upload {
+  border: 1.5px dashed color-mix(in srgb, var(--accent) 45%, var(--border));
+  border-radius: 12px;
+  background: var(--accent-soft);
+  padding: 26px;
+  text-align: center;
+  color: var(--accent);
+  cursor: pointer;
+  display: block;
 }
-.add-product-name input ,.add-product-description textarea{
-    padding: 10px 10px;
+.add-upload svg { width: 30px; height: 30px; }
+.add-upload b { display: block; margin-top: 8px; font-size: 13.5px; }
+.add-upload span { font-size: 12px; color: var(--ink-2); }
+
+.add-preview {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  cursor: pointer;
 }
-.add-category-price{
-    display: flex;
-    gap: 30px;
+.add-preview img {
+  width: 130px; height: 130px; object-fit: cover;
+  border-radius: 12px; border: 1px solid var(--border);
 }
-.add-category-price select,.add-category-price input{
-    max-width: 120px;
-    padding: 10px;
+.add-preview span { font-size: 12px; color: var(--accent); }
+
+.add-row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
 }
-.add-btn{
-    max-width: 120px;
-    border: none;
-    padding: 10px;
-    background-color: black;
-    color: white;
-    cursor: pointer;
+.add-type { display: flex; gap: 12px; }
+.add-type-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 18px; border-radius: 10px;
+    border: 1px solid var(--border); background: var(--surface-2);
+    color: var(--ink-2); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+    transition: .15s;
+}
+.add-type-btn.veg.active { border-color: #1B9E6A; color: #1B9E6A; background: color-mix(in srgb, #1B9E6A 12%, transparent); }
+.add-type-btn.nonveg.active { border-color: #E23744; color: #E23744; background: color-mix(in srgb, #E23744 12%, transparent); }
+
+/* classic veg / non-veg indicator */
+.veg-dot {
+    width: 14px; height: 14px; border-radius: 3px;
+    display: inline-grid; place-items: center;
+    border: 1.5px solid #1B9E6A;
+}
+.veg-dot::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #1B9E6A; }
+.veg-dot.nonveg { border-color: #E23744; }
+.veg-dot.nonveg::after { background: #E23744; }
+
+.add-form .btn { align-self: flex-start; padding: 11px 22px; }
+
+@media (max-width: 600px) {
+  .add-row2 { grid-template-columns: 1fr; }
 }

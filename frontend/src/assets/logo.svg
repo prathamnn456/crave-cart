@@ -1,0 +1,12 @@
+<svg viewBox="0 0 222 38" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CraveCart">
+  <!-- shopping cart glyph -->
+  <g fill="none" stroke="#FF5A2C" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 6 h6 l3.2 16 h20.5 l3.4 -12 H15.5"/>
+  </g>
+  <circle cx="19.5" cy="29.5" r="3" fill="#FF5A2C"/>
+  <circle cx="33.5" cy="29.5" r="3" fill="#FF5A2C"/>
+  <!-- wordmark -->
+  <text x="46" y="31" font-family="'Segoe UI', 'Trebuchet MS', Arial, sans-serif" font-size="33" font-weight="700" letter-spacing="-1">
+    <tspan fill="#FF5A2C">Crave</tspan><tspan fill="#FF8A3D">Cart</tspan><tspan fill="#FF5A2C" font-size="37">.</tspan>
+  </text>
+</svg>

@@ -1,4 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --accent: #FF5A2C;
+  --accent-2: #FF8A3D;
+  --accent-hover: #ef4d21;
+  --accent-soft: #FFEDE5;
+  --ground: #FCF9F5;
+  --surface: #FFFFFF;
+  --surface-2: #F5EEE7;
+  --border: #ECE3DC;
+  --ink: #241E1A;
+  --ink-2: #6E6259;
+  --ink-3: #9A8E83;
+  --star: #FF9F1C;
+  --shadow: 0 1px 2px rgba(36,30,26,.04), 0 12px 34px -14px rgba(36,30,26,.16);
+  --shadow-lg: 0 30px 60px -24px rgba(255,90,44,.35);
+  --radius: 18px;
+  --footer-bg: #1c1712;
+}
+
+:root[data-theme="dark"] {
+  --accent-soft: #3A2013;
+  --ground: #15110D;
+  --surface: #1E1813;
+  --surface-2: #271F18;
+  --border: #362A22;
+  --ink: #F6EFE7;
+  --ink-2: #B7A99C;
+  --ink-3: #7E7264;
+  --shadow: 0 1px 2px rgba(0,0,0,.35), 0 14px 40px -16px rgba(0,0,0,.7);
+  --shadow-lg: 0 30px 60px -24px rgba(0,0,0,.7);
+  --footer-bg: #100c09;
+}
 
 * {
   margin: 0;
@@ -10,6 +43,9 @@
 
 body {
   min-height: 100vh;
+  background: var(--ground);
+  color: var(--ink);
+  transition: background-color .25s ease, color .25s ease;
 }
 
 a {
@@ -23,14 +59,42 @@ a {
 }
 
 @keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
+
+/* scroll-reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .6s ease, transform .6s cubic-bezier(.2, .7, .2, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.reveal.reveal-in {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* loading skeleton primitives (used across pages) */
+.sk {
+  background: linear-gradient(90deg, var(--surface-2) 25%, color-mix(in srgb, var(--surface-2) 60%, var(--border)) 37%, var(--surface-2) 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.3s ease-in-out infinite;
+  border-radius: 8px;
+}
+.sk-line { height: 14px; }
+.sk-line.lg { width: 70%; }
+.sk-line.sm { width: 45%; height: 11px; }
+.sk-line.price { width: 30%; height: 18px; margin-top: 4px; }
+@keyframes shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: 0 0; }
+}
+@media (prefers-reduced-motion: reduce) { .sk { animation: none; } }
 
 @media (max-width:1050px) {
   .app {

@@ -38,6 +38,7 @@ const LoginPopup = ({ setShowLogin }) => {
             localStorage.setItem("token", response.data.token)
             loadCartData({token:response.data.token})
             setShowLogin(false)
+            toast.success(currState === "Login" ? "Welcome back! 👋" : "Account created — welcome to CraveCart! 🎉")
         }
         else {
             toast.error(response.data.message)
