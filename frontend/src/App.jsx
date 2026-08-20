@@ -12,6 +12,7 @@ import CartDrawer from './components/CartDrawer/CartDrawer'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Verify from './pages/Verify/Verify'
+import Favorites from './pages/Favorites/Favorites'
 
 const App = () => {
 
@@ -38,6 +39,7 @@ const App = () => {
           <Route path='/cart' element={<Cart />}/>
           <Route path='/order' element={<PlaceOrder />}/>
           <Route path='/myorders' element={<MyOrders />}/>
+          <Route path='/favorites' element={<Favorites />}/>
           <Route path='/verify' element={<Verify />}/>
         </Routes>
       </div>

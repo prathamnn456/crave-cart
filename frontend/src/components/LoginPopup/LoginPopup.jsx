@@ -7,7 +7,7 @@ import { toast } from 'react-toastify'
 
 const LoginPopup = ({ setShowLogin }) => {
 
-    const { setToken, url,loadCartData } = useContext(StoreContext)
+    const { setToken, url,loadCartData,loadFavorites } = useContext(StoreContext)
     const [currState, setCurrState] = useState("Sign Up");
 
     const [data, setData] = useState({
@@ -37,6 +37,7 @@ const LoginPopup = ({ setShowLogin }) => {
             setToken(response.data.token)
             localStorage.setItem("token", response.data.token)
             loadCartData({token:response.data.token})
+            loadFavorites(response.data.token)
             setShowLogin(false)
             toast.success(currState === "Login" ? "Welcome back! 👋" : "Account created — welcome to CraveCart! 🎉")
         }

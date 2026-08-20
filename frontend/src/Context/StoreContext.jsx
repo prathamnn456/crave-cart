@@ -11,6 +11,7 @@ const StoreContextProvider = (props) => {
     const [foodLoading, setFoodLoading] = useState(true);
     const [cartItems, setCartItems] = useState({});
     const [token, setToken] = useState("")
+    const [favorites, setFavorites] = useState([]); // array of favorited food ids
     const [coupon, setCoupon] = useState(null); // { code, discount, label }
     const currency = "₹";
     const deliveryCharge = 50;
@@ -114,12 +115,42 @@ const StoreContextProvider = (props) => {
         setCartItems(response.data.cartData);
     }
 
+    const isFavorite = (id) => favorites.includes(id);
+
+    const toggleFavorite = async (id) => {
+        if (!token) {
+            toast.info("Sign in to save your favorites ❤️", { toastId: "fav" });
+            return;
+        }
+        const willFav = !favorites.includes(id);
+        setFavorites((prev) => willFav ? [...prev, id] : prev.filter((f) => f !== id)); // optimistic
+        const item = food_list.find((p) => p._id === id);
+        toast[willFav ? "success" : "info"](
+            `${item ? item.name : "Item"} ${willFav ? "added to" : "removed from"} favorites`,
+            { toastId: "fav" }
+        );
+        try {
+            await axios.post(url + "/api/favorite/toggle", { itemId: id }, { headers: { token } });
+        } catch {
+            setFavorites((prev) => willFav ? prev.filter((f) => f !== id) : [...prev, id]); // revert
+            toast.error("Could not update favorites");
+        }
+    }
+
+    const loadFavorites = async (tk) => {
+        try {
+            const res = await axios.post(url + "/api/favorite/get", {}, { headers: { token: tk } });
+            setFavorites(res.data.favorites || []);
+        } catch { /* ignore */ }
+    }
+
     useEffect(() => {
         async function loadData() {
             await fetchFoodList();
             if (localStorage.getItem("token")) {
                 setToken(localStorage.getItem("token"))
                 await loadCartData({ token: localStorage.getItem("token") })
+                await loadFavorites(localStorage.getItem("token"))
             }
         }
         loadData()
@@ -143,7 +174,11 @@ const StoreContextProvider = (props) => {
         coupon,
         applyCoupon,
         removeCoupon,
-        getDiscount
+        getDiscount,
+        favorites,
+        isFavorite,
+        toggleFavorite,
+        loadFavorites
     };
 
     return (

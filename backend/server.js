@@ -8,6 +8,7 @@ import cartRouter from "./routes/cartRoute.js"
 import orderRouter from "./routes/orderRoute.js"
 import adminRouter from "./routes/adminRoute.js"
 import couponRouter from "./routes/couponRoute.js"
+import favoriteRouter from "./routes/favoriteRoute.js"
 
 // app config
 const app = express()
@@ -29,6 +30,7 @@ app.use("/api/cart", cartRouter)
 app.use("/api/order",orderRouter)
 app.use("/api/admin",adminRouter)
 app.use("/api/coupon",couponRouter)
+app.use("/api/favorite",favoriteRouter)
 
 app.get("/", (req, res) => {
     res.send("API Working")
