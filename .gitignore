@@ -1,0 +1,22 @@
+# dependencies
+node_modules/
+**/node_modules/
+
+# env / secrets
+.env
+**/.env
+!**/.env.example
+
+# build output
+dist/
+**/dist/
+
+# NOTE: backend/uploads/ IS committed so existing food images show on the
+# deployed site. Render's disk is ephemeral, so images uploaded via the admin
+# panel AFTER deploy will disappear on restart (use Cloudinary later to fix).
+
+# logs & os
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
