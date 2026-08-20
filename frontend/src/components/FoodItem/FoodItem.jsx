@@ -2,13 +2,13 @@ import React, { useContext, useState } from 'react'
 import './FoodItem.css'
 import { assets } from '../../assets/assets'
 import { StoreContext } from '../../Context/StoreContext';
-import StarRating, { ratingFor } from '../StarRating/StarRating';
+import StarRating from '../StarRating/StarRating';
 
 const FoodItem = ({ image, name, price, desc , id, type, category, onQuickView }) => {
 
     const [itemCount, setItemCount] = useState(0);
-    const {cartItems,addToCart,removeFromCart,url,currency,isFavorite,toggleFavorite} = useContext(StoreContext);
-    const { rating, count } = ratingFor(id);
+    const {cartItems,addToCart,removeFromCart,url,currency,isFavorite,toggleFavorite,getRating} = useContext(StoreContext);
+    const { avg: rating, count } = getRating(id);
     const faved = isFavorite(id);
 
     const openQuickView = () => onQuickView && onQuickView({ image, name, price, desc, id, type, category });

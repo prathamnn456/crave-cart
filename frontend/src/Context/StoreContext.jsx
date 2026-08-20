@@ -12,6 +12,7 @@ const StoreContextProvider = (props) => {
     const [cartItems, setCartItems] = useState({});
     const [token, setToken] = useState("")
     const [favorites, setFavorites] = useState([]); // array of favorited food ids
+    const [ratings, setRatings] = useState({}); // foodId -> { avg, count }
     const [coupon, setCoupon] = useState(null); // { code, discount, label }
     const currency = "₹";
     const deliveryCharge = 50;
@@ -110,6 +111,32 @@ const StoreContextProvider = (props) => {
         }
     }
 
+    const loadRatings = async () => {
+        try {
+            const res = await axios.post(url + "/api/review/summary", {});
+            setRatings(res.data.summary || {});
+        } catch { /* ignore */ }
+    }
+
+    const getRating = (id) => ratings[id] || { avg: 0, count: 0 };
+
+    const submitReview = async (foodId, rating, comment) => {
+        if (!token) { toast.info("Sign in to leave a review"); return false; }
+        try {
+            const res = await axios.post(url + "/api/review/add", { foodId, rating, comment }, { headers: { token } });
+            if (res.data.success) {
+                toast.success("Thanks for your review! ⭐");
+                loadRatings();
+                return true;
+            }
+            toast.error(res.data.message || "Could not save review");
+            return false;
+        } catch {
+            toast.error("Could not save review");
+            return false;
+        }
+    }
+
     const loadCartData = async (token) => {
         const response = await axios.post(url + "/api/cart/get", {}, { headers: token });
         setCartItems(response.data.cartData);
@@ -147,6 +174,7 @@ const StoreContextProvider = (props) => {
     useEffect(() => {
         async function loadData() {
             await fetchFoodList();
+            loadRatings();
             if (localStorage.getItem("token")) {
                 setToken(localStorage.getItem("token"))
                 await loadCartData({ token: localStorage.getItem("token") })
@@ -178,7 +206,10 @@ const StoreContextProvider = (props) => {
         favorites,
         isFavorite,
         toggleFavorite,
-        loadFavorites
+        loadFavorites,
+        ratings,
+        getRating,
+        submitReview
     };
 
     return (
