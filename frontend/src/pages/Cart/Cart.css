@@ -198,3 +198,17 @@
     .cart-items { padding: 8px 14px 12px; }
     .cart-items-title { font-size: 11px; }
 }
+
+/* ---- Coupon / discount ---- */
+.cart-total-discount p { color: #16a34a; font-weight: 600; }
+.cart-coupon-applied {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46;
+  padding: 12px 14px; border-radius: 8px; font-size: 14px;
+}
+.cart-coupon-applied button {
+  background: none; border: none; color: #dc2626; cursor: pointer;
+  font-weight: 600; font-size: 13px; padding: 0;
+}
+.cart-promocode-hint { margin-top: 10px; font-size: 12.5px; color: #64748b; }
+.cart-promocode-hint b { color: tomato; }

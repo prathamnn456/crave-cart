@@ -11,6 +11,7 @@ const StoreContextProvider = (props) => {
     const [foodLoading, setFoodLoading] = useState(true);
     const [cartItems, setCartItems] = useState({});
     const [token, setToken] = useState("")
+    const [coupon, setCoupon] = useState(null); // { code, discount, label }
     const currency = "₹";
     const deliveryCharge = 50;
 
@@ -55,6 +56,50 @@ const StoreContextProvider = (props) => {
         return totalAmount;
     }
 
+    const applyCoupon = async (code) => {
+        const subtotal = getTotalCartAmount();
+        if (!code || !code.trim()) {
+            toast.error("Please enter a promo code");
+            return false;
+        }
+        try {
+            const res = await axios.post(url + "/api/coupon/apply", { code, amount: subtotal });
+            if (res.data.success) {
+                setCoupon({ code: res.data.code, discount: res.data.discount, label: res.data.label });
+                toast.success(res.data.message);
+                return true;
+            }
+            toast.error(res.data.message || "That promo code isn't valid");
+            return false;
+        } catch (error) {
+            toast.error("Could not apply coupon");
+            return false;
+        }
+    }
+
+    const removeCoupon = () => setCoupon(null);
+
+    // discount clamped to the current subtotal (in case the cart shrank)
+    const getDiscount = () => (coupon ? Math.min(coupon.discount, getTotalCartAmount()) : 0);
+
+    // keep the discount in sync when the cart changes while a coupon is applied
+    useEffect(() => {
+        if (!coupon) return;
+        const subtotal = getTotalCartAmount();
+        if (subtotal === 0) { setCoupon(null); return; }
+        (async () => {
+            try {
+                const res = await axios.post(url + "/api/coupon/apply", { code: coupon.code, amount: subtotal });
+                if (res.data.success) {
+                    setCoupon({ code: res.data.code, discount: res.data.discount, label: res.data.label });
+                } else {
+                    setCoupon(null);
+                }
+            } catch { /* keep last known discount on network error */ }
+        })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cartItems]);
+
     const fetchFoodList = async () => {
         try {
             const response = await axios.get(url + "/api/food/list");
@@ -94,7 +139,11 @@ const StoreContextProvider = (props) => {
         loadCartData,
         setCartItems,
         currency,
-        deliveryCharge
+        deliveryCharge,
+        coupon,
+        applyCoupon,
+        removeCoupon,
+        getDiscount
     };
 
     return (

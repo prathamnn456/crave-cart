@@ -21,9 +21,13 @@ const PlaceOrder = () => {
         phone: ""
     })
 
-    const { getTotalCartAmount, token, food_list, cartItems, url, setCartItems,currency,deliveryCharge } = useContext(StoreContext);
+    const { getTotalCartAmount, token, food_list, cartItems, url, setCartItems,currency,deliveryCharge,coupon,getDiscount } = useContext(StoreContext);
 
     const navigate = useNavigate();
+
+    const subtotal = getTotalCartAmount();
+    const discount = getDiscount();
+    const orderTotal = subtotal === 0 ? 0 : subtotal - discount + deliveryCharge;
 
     const onChangeHandler = (event) => {
         const name = event.target.name
@@ -44,7 +48,8 @@ const PlaceOrder = () => {
         let orderData = {
             address: data,
             items: orderItems,
-            amount: getTotalCartAmount() + deliveryCharge,
+            amount: orderTotal,
+            couponCode: coupon ? coupon.code : "",
         }
         if (payment === "stripe") {
             let response = await axios.post(url + "/api/order/place", orderData, { headers: { token } });
@@ -104,11 +109,17 @@ const PlaceOrder = () => {
                 <div className="cart-total">
                     <h2>Cart Totals</h2>
                     <div>
-                        <div className="cart-total-details"><p>Subtotal</p><p>{currency}{getTotalCartAmount()}</p></div>
+                        <div className="cart-total-details"><p>Subtotal</p><p>{currency}{subtotal}</p></div>
                         <hr />
-                        <div className="cart-total-details"><p>Delivery Fee</p><p>{currency}{getTotalCartAmount() === 0 ? 0 : deliveryCharge}</p></div>
+                        {discount > 0 && (
+                            <>
+                                <div className="cart-total-details cart-total-discount"><p>Discount ({coupon.code})</p><p>-{currency}{discount}</p></div>
+                                <hr />
+                            </>
+                        )}
+                        <div className="cart-total-details"><p>Delivery Fee</p><p>{currency}{subtotal === 0 ? 0 : deliveryCharge}</p></div>
                         <hr />
-                        <div className="cart-total-details"><b>Total</b><b>{currency}{getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + deliveryCharge}</b></div>
+                        <div className="cart-total-details"><b>Total</b><b>{currency}{orderTotal}</b></div>
                     </div>
                 </div>
                 <div className="payment">

@@ -1,5 +1,6 @@
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js"
+import { computeDiscount } from "./couponController.js";
 import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -12,11 +13,18 @@ const frontend_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 const placeOrder = async (req, res) => {
 
     try {
+        // recompute totals server-side so the charge can't be tampered with
+        const subtotal = req.body.items.reduce((sum, it) => sum + it.price * it.quantity, 0);
+        const { discount } = computeDiscount(req.body.couponCode, subtotal);
+        const finalAmount = subtotal - discount + deliveryCharge;
+
         const newOrder = new orderModel({
             userId: req.body.userId,
             items: req.body.items,
-            amount: req.body.amount,
+            amount: finalAmount,
             address: req.body.address,
+            coupon: discount > 0 ? String(req.body.couponCode).trim().toUpperCase() : "",
+            discount: discount,
         })
         await newOrder.save();
         await userModel.findByIdAndUpdate(req.body.userId, { cartData: {} });
@@ -27,7 +35,7 @@ const placeOrder = async (req, res) => {
                 product_data: {
                     name: item.name
                 },
-                unit_amount: item.price * 100 
+                unit_amount: item.price * 100
             },
             quantity: item.quantity
         }))
@@ -43,11 +51,24 @@ const placeOrder = async (req, res) => {
             quantity: 1
         })
 
+        // apply the discount as a one-time Stripe coupon on the checkout session
+        let discounts = [];
+        if (discount > 0) {
+            const couponObj = await stripe.coupons.create({
+                amount_off: discount * 100,
+                currency: currency,
+                duration: 'once',
+                name: `Coupon ${String(req.body.couponCode).trim().toUpperCase()}`,
+            });
+            discounts = [{ coupon: couponObj.id }];
+        }
+
         const session = await stripe.checkout.sessions.create({
             success_url: `${frontend_URL}/verify?success=true&orderId=${newOrder._id}`,
             cancel_url: `${frontend_URL}/verify?success=false&orderId=${newOrder._id}`,
             line_items: line_items,
             mode: 'payment',
+            discounts: discounts,
         });
 
         res.json({ success: true, session_url: session.url });
@@ -62,12 +83,18 @@ const placeOrder = async (req, res) => {
 const placeOrderCod = async (req, res) => {
 
     try {
+        const subtotal = req.body.items.reduce((sum, it) => sum + it.price * it.quantity, 0);
+        const { discount } = computeDiscount(req.body.couponCode, subtotal);
+        const finalAmount = subtotal - discount + deliveryCharge;
+
         const newOrder = new orderModel({
             userId: req.body.userId,
             items: req.body.items,
-            amount: req.body.amount,
+            amount: finalAmount,
             address: req.body.address,
             payment: true,
+            coupon: discount > 0 ? String(req.body.couponCode).trim().toUpperCase() : "",
+            discount: discount,
         })
         await newOrder.save();
         await userModel.findByIdAndUpdate(req.body.userId, { cartData: {} });

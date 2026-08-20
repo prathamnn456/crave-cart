@@ -6,21 +6,17 @@ import { toast } from 'react-toastify';
 
 const Cart = () => {
 
-  const {cartItems, food_list, removeFromCart,getTotalCartAmount,url,currency,deliveryCharge} = useContext(StoreContext);
+  const {cartItems, food_list, removeFromCart,getTotalCartAmount,url,currency,deliveryCharge,coupon,applyCoupon,removeCoupon,getDiscount} = useContext(StoreContext);
   const navigate = useNavigate();
   const [promo, setPromo] = useState("");
 
-  const applyPromo = () => {
-    if (!promo.trim()) {
-      toast.error("Please enter a promo code");
-      return;
-    }
-    if (promo.trim().toUpperCase() === "CRAVE10") {
-      toast.success("Promo code applied — 10% off! 🎉");
-    } else {
-      toast.error("That promo code isn't valid");
-    }
-    setPromo("");
+  const subtotal = getTotalCartAmount();
+  const discount = getDiscount();
+  const total = subtotal === 0 ? 0 : subtotal - discount + deliveryCharge;
+
+  const applyPromo = async () => {
+    const ok = await applyCoupon(promo);
+    if (ok) setPromo("");
   };
 
   return (
@@ -51,25 +47,45 @@ const Cart = () => {
         <div className="cart-total">
           <h2>Cart Totals</h2>
           <div>
-            <div className="cart-total-details"><p>Subtotal</p><p>{currency}{getTotalCartAmount()}</p></div>
+            <div className="cart-total-details"><p>Subtotal</p><p>{currency}{subtotal}</p></div>
             <hr />
-            <div className="cart-total-details"><p>Delivery Fee</p><p>{currency}{getTotalCartAmount()===0?0:deliveryCharge}</p></div>
+            {discount > 0 && (
+              <>
+                <div className="cart-total-details cart-total-discount">
+                  <p>Discount ({coupon.code})</p><p>-{currency}{discount}</p>
+                </div>
+                <hr />
+              </>
+            )}
+            <div className="cart-total-details"><p>Delivery Fee</p><p>{currency}{subtotal===0?0:deliveryCharge}</p></div>
             <hr />
-            <div className="cart-total-details"><b>Total</b><b>{currency}{getTotalCartAmount()===0?0:getTotalCartAmount()+deliveryCharge}</b></div>
+            <div className="cart-total-details"><b>Total</b><b>{currency}{total}</b></div>
           </div>
           <button
             onClick={()=>navigate('/order')}
-            disabled={getTotalCartAmount()===0}
-            title={getTotalCartAmount()===0 ? 'Add items to your cart first' : ''}
+            disabled={subtotal===0}
+            title={subtotal===0 ? 'Add items to your cart first' : ''}
           >PROCEED TO CHECKOUT</button>
         </div>
         <div className="cart-promocode">
           <div>
-            <p>If you have a promo code, Enter it here</p>
-            <div className='cart-promocode-input'>
-              <input type="text" placeholder='promo code' value={promo} onChange={(e) => setPromo(e.target.value)} />
-              <button onClick={applyPromo}>Submit</button>
-            </div>
+            {coupon ? (
+              <div className='cart-coupon-applied'>
+                <span>✅ <b>{coupon.code}</b> applied — {coupon.label}</span>
+                <button type='button' onClick={removeCoupon}>Remove</button>
+              </div>
+            ) : (
+              <>
+                <p>If you have a promo code, Enter it here</p>
+                <div className='cart-promocode-input'>
+                  <input type="text" placeholder='promo code' value={promo}
+                    onChange={(e) => setPromo(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') applyPromo(); }} />
+                  <button onClick={applyPromo}>Submit</button>
+                </div>
+                <p className='cart-promocode-hint'>Try <b>CRAVE10</b>, <b>SAVE20</b>, <b>WELCOME15</b> or <b>FLAT50</b> (₹200+).</p>
+              </>
+            )}
           </div>
         </div>
       </div>
