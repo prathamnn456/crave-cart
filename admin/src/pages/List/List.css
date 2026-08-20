@@ -83,10 +83,11 @@
   border: 1px solid var(--border); background: var(--surface-2);
   color: var(--ink-2); font-weight: 600; font-size: 13px;
 }
-.edit-type-btn.active { border-color: var(--accent); color: var(--ink); }
-.veg-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid #16a34a; display: inline-block; }
-.veg-dot.veg { background: #16a34a; }
-.veg-dot.nonveg { border-color: #dc2626; background: #dc2626; }
+.edit-type-btn.veg.active { border-color: var(--good); color: var(--good); background: var(--good-soft); }
+.edit-type-btn.nonveg.active { border-color: #E23744; color: #E23744; background: color-mix(in srgb, #E23744 14%, transparent); }
+.veg-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--good); display: inline-block; }
+.veg-dot.veg { background: var(--good); }
+.veg-dot.nonveg { border-color: #E23744; background: #E23744; }
 
 .edit-actions { display: flex; gap: 10px; margin-top: 4px; }
 .edit-btn {
@@ -109,3 +110,36 @@
   font-size: 12px; color: var(--ink-2);
   background: var(--surface-2); padding: 3px 9px; border-radius: 7px;
 }
+
+/* ---- loading skeleton ---- */
+.sk {
+  display: block; border-radius: 8px;
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--border) 37%, var(--surface-2) 63%);
+  background-size: 400% 100%;
+  animation: sk-shimmer 1.3s ease infinite;
+}
+.sk-line { height: 12px; }
+.sk-line.lg { width: 60%; height: 15px; }
+.sk-line.sm { width: 40%; }
+@keyframes sk-shimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+
+/* ---- empty state ---- */
+.menu-empty {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 70px 20px; text-align: center;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+}
+.menu-empty-icon {
+  width: 60px; height: 60px; border-radius: 16px; margin-bottom: 8px;
+  background: var(--accent-soft); color: var(--accent);
+  display: grid; place-items: center;
+}
+.menu-empty-icon svg { width: 30px; height: 30px; }
+.menu-empty p { font-size: 17px; font-weight: 700; color: var(--ink); }
+.menu-empty span { font-size: 13.5px; color: var(--ink-2); }
+.menu-empty button {
+  margin-top: 14px; border: none; background: var(--accent); color: #fff;
+  padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; font-family: inherit;
+}
+.menu-empty button:hover { background: var(--accent-hover); }

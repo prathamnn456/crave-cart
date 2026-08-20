@@ -3,24 +3,30 @@ import './List.css'
 import { url, currency } from '../../assets/assets'
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const CATEGORIES = ["Salad", "Rolls", "Deserts", "Sandwich", "Cake", "Pure Veg", "Pasta", "Noodles", "Biryani", "Pizza", "Burger", "Chicken", "Paneer", "Momos", "Thali", "Seafood", "Beverages", "Ice Cream"];
 
 const List = () => {
 
+  const navigate = useNavigate();
   const [list, setList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(null);   // item currently being edited
   const [form, setForm] = useState({ name: "", description: "", price: "", category: "Salad", type: "veg" });
   const [newImage, setNewImage] = useState(null); // optional replacement image
   const [saving, setSaving] = useState(false);
 
   const fetchList = async () => {
-    const response = await axios.get(`${url}/api/food/list`)
-    if (response.data.success) {
-      setList(response.data.data);
-    }
-    else {
-      toast.error("Error")
+    try {
+      const response = await axios.get(`${url}/api/food/list`)
+      if (response.data.success) {
+        setList(response.data.data);
+      } else {
+        toast.error("Error")
+      }
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -100,6 +106,29 @@ const List = () => {
         </div>
       </div>
 
+      {loading ? (
+        <div className='menu-grid'>
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div className='food-card' key={i}>
+              <div className='sk' style={{ height: 130 }}></div>
+              <div className='food-body'>
+                <div className='sk sk-line lg'></div>
+                <div className='sk sk-line' style={{ marginTop: 8 }}></div>
+                <div className='sk sk-line sm' style={{ marginTop: 12 }}></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : list.length === 0 ? (
+        <div className='menu-empty'>
+          <div className='menu-empty-icon'>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M3 9h18M8 4v16" strokeLinecap="round" /></svg>
+          </div>
+          <p>No items on the menu yet</p>
+          <span>Add your first dish to get started.</span>
+          <button onClick={() => navigate('/add')}>+ Add Item</button>
+        </div>
+      ) : (
       <div className='menu-grid'>
         {list.map((item, index) => (
           <div key={index} className='food-card'>
@@ -123,6 +152,7 @@ const List = () => {
           </div>
         ))}
       </div>
+      )}
 
       {editing && (
         <div className='edit-overlay' onClick={closeEdit}>
