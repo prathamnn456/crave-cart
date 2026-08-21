@@ -24,8 +24,47 @@ const MyOrders = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openMap, setOpenMap] = useState(null);
-  const { url, token, currency, addToCart, food_list } = useContext(StoreContext);
+  const { url, token, currency, addToCart, food_list, deliveryCharge } = useContext(StoreContext);
   const navigate = useNavigate();
+
+  const printReceipt = (order) => {
+    const a = order.address || {};
+    const subtotal = order.items.reduce((s, it) => s + it.price * it.quantity, 0);
+    const rows = order.items.map(it => (
+      `<tr><td>${it.name}</td><td class="c">${it.quantity}</td><td class="r">${currency}${it.price}</td><td class="r">${currency}${it.price * it.quantity}</td></tr>`
+    )).join('');
+    const html = `<!doctype html><html><head><meta charset="utf-8"><title>Receipt ${order._id.slice(-6).toUpperCase()}</title>
+      <style>
+        body{font-family:Arial,Helvetica,sans-serif;color:#222;max-width:420px;margin:24px auto;padding:0 18px}
+        h1{color:tomato;margin:0 0 2px;font-size:26px}
+        .muted{color:#777;font-size:12px}
+        table{width:100%;border-collapse:collapse;margin-top:14px;font-size:13px}
+        th,td{padding:7px 4px;border-bottom:1px solid #eee}
+        th{text-align:left;color:#888;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+        .c{text-align:center}.r{text-align:right}
+        .totals td{border:none;padding:3px 4px}
+        .grand td{font-weight:bold;font-size:15px;border-top:2px solid #222;padding-top:8px}
+        .foot{margin-top:22px;text-align:center;color:#777;font-size:12px}
+      </style></head>
+      <body>
+        <h1>CraveCart<span style="color:#222">.</span></h1>
+        <div class="muted">Order #${order._id.slice(-6).toUpperCase()} · ${new Date(order.date).toLocaleString()}</div>
+        <div class="muted">Status: ${order.status}</div>
+        <table><thead><tr><th>Item</th><th class="c">Qty</th><th class="r">Price</th><th class="r">Total</th></tr></thead><tbody>${rows}</tbody></table>
+        <table class="totals">
+          <tr><td>Subtotal</td><td class="r">${currency}${subtotal}</td></tr>
+          ${order.discount ? `<tr><td>Discount ${order.coupon ? '(' + order.coupon + ')' : ''}</td><td class="r">-${currency}${order.discount}</td></tr>` : ''}
+          <tr><td>Delivery</td><td class="r">${currency}${deliveryCharge}</td></tr>
+          <tr class="grand"><td>Total paid</td><td class="r">${currency}${order.amount}</td></tr>
+        </table>
+        <div class="muted" style="margin-top:18px"><b>Deliver to</b><br>${a.firstName || ''} ${a.lastName || ''}<br>${[a.street, a.city, a.state, a.country, a.zipcode].filter(Boolean).join(', ')}<br>${a.phone || ''}</div>
+        <div class="foot">Thank you for ordering with CraveCart! 🧡</div>
+        <script>window.onload=function(){window.print()}</script>
+      </body></html>`;
+    const w = window.open('', '_blank', 'width=460,height=680');
+    if (!w) { toast.error('Please allow pop-ups to print the receipt'); return; }
+    w.document.write(html); w.document.close();
+  }
 
   const reorder = async (order) => {
     let added = 0, skipped = 0;
@@ -123,6 +162,7 @@ const MyOrders = () => {
                   {openMap === order._id ? '▲ Hide delivery location' : '📍 View delivery location'}
                 </button>
                 <button className='order-reorder' onClick={() => reorder(order)}>🔁 Reorder</button>
+                <button onClick={() => printReceipt(order)}>🧾 Receipt</button>
               </div>
               {openMap === order._id && (
                 <div className='order-map'>
