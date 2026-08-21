@@ -66,6 +66,17 @@ const editFood = async (req, res) => {
     }
 }
 
+// toggle availability (in stock / out of stock)
+const setAvailability = async (req, res) => {
+    try {
+        await foodModel.findByIdAndUpdate(req.body.id, { available: !!req.body.available });
+        res.json({ success: true, message: req.body.available ? "Marked in stock" : "Marked out of stock" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error" });
+    }
+}
+
 // delete food
 const removeFood = async (req, res) => {
     try {
@@ -83,4 +94,4 @@ const removeFood = async (req, res) => {
 
 }
 
-export { listFood, addFood, editFood, removeFood }
+export { listFood, addFood, editFood, setAvailability, removeFood }

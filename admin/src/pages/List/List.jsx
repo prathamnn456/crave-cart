@@ -31,6 +31,20 @@ const List = ({ search = '' }) => {
     }
   }
 
+  const toggleAvailability = async (item) => {
+    try {
+      const res = await axios.post(`${url}/api/food/availability`, { id: item._id, available: item.available === false });
+      if (res.data.success) {
+        toast.success(res.data.message);
+        await fetchList();
+      } else {
+        toast.error("Error");
+      }
+    } catch {
+      toast.error("Error");
+    }
+  }
+
   const removeFood = async (foodId) => {
     const response = await axios.post(`${url}/api/food/remove`, {
       id: foodId
@@ -153,9 +167,10 @@ const List = ({ search = '' }) => {
       ) : view === 'grid' ? (
         <div className='menu-grid'>
           {filtered.map((item) => (
-            <div key={item._id} className='food-card'>
+            <div key={item._id} className={'food-card' + (item.available === false ? ' is-out' : '')}>
               <div className='food-thumb'>
                 <img src={`${url}/images/` + item.image} alt={item.name} />
+                {item.available === false && <span className='food-oos'>Out of stock</span>}
                 <span className='food-veg' title={item.type === 'nonveg' ? 'Non-veg' : 'Veg'}>
                   <span className={'veg-dot' + (item.type === 'nonveg' ? ' nonveg' : ' veg')}></span>
                 </span>
@@ -173,6 +188,17 @@ const List = ({ search = '' }) => {
                   <span className='food-cat'>{item.category}</span>
                   <span className='food-price tnum'>{currency}{item.price}</span>
                 </div>
+                <div className='food-stock'>
+                  <span>{item.available === false ? 'Out of stock' : 'Available'}</span>
+                  <button
+                    type='button'
+                    className={'switch' + (item.available !== false ? ' on' : '')}
+                    onClick={() => toggleAvailability(item)}
+                    aria-label='Toggle availability'
+                  >
+                    <span className='switch-knob'></span>
+                  </button>
+                </div>
               </div>
             </div>
           ))}
@@ -186,6 +212,7 @@ const List = ({ search = '' }) => {
                 <th>Category</th>
                 <th>Type</th>
                 <th>Price</th>
+                <th>Status</th>
                 <th className='ta-right'>Actions</th>
               </tr>
             </thead>
@@ -209,6 +236,19 @@ const List = ({ search = '' }) => {
                     </span>
                   </td>
                   <td><b className='cell-price'>{currency}{item.price}</b></td>
+                  <td>
+                    <div className='food-stock'>
+                      <button
+                        type='button'
+                        className={'switch' + (item.available !== false ? ' on' : '')}
+                        onClick={() => toggleAvailability(item)}
+                        aria-label='Toggle availability'
+                      >
+                        <span className='switch-knob'></span>
+                      </button>
+                      <span className='cell-stock-label'>{item.available === false ? 'Out' : 'In stock'}</span>
+                    </div>
+                  </td>
                   <td className='ta-right'>
                     <div className='cell-actions'>
                       <button className='row-btn' title='Edit' onClick={() => openEdit(item)}>

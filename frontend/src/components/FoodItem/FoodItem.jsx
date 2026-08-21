@@ -4,19 +4,21 @@ import { assets } from '../../assets/assets'
 import { StoreContext } from '../../Context/StoreContext';
 import StarRating from '../StarRating/StarRating';
 
-const FoodItem = ({ image, name, price, desc , id, type, category, onQuickView }) => {
+const FoodItem = ({ image, name, price, desc , id, type, category, available, onQuickView }) => {
 
     const [itemCount, setItemCount] = useState(0);
     const {cartItems,addToCart,removeFromCart,url,currency,isFavorite,toggleFavorite,getRating} = useContext(StoreContext);
     const { avg: rating, count } = getRating(id);
     const faved = isFavorite(id);
+    const outOfStock = available === false;
 
     const openQuickView = () => onQuickView && onQuickView({ image, name, price, desc, id, type, category });
 
     return (
-        <div className='food-item'>
+        <div className={'food-item' + (outOfStock ? ' food-item-out' : '')}>
             <div className='food-item-img-container'>
                 <img className='food-item-image food-item-clickable' src={url+"/images/"+image} alt={name} onClick={openQuickView} />
+                {outOfStock && <span className='food-item-oos'>Currently unavailable</span>}
                 <button
                     className={'food-item-fav' + (faved ? ' active' : '')}
                     title={faved ? 'Remove from favorites' : 'Add to favorites'}
@@ -27,14 +29,14 @@ const FoodItem = ({ image, name, price, desc , id, type, category, onQuickView }
                     </svg>
                 </button>
                 <span className={'food-item-veg veg-dot' + (type === 'nonveg' ? ' nonveg' : '')} title={type === 'nonveg' ? 'Non-veg' : 'Veg'}></span>
-                {!cartItems[id]
+                {outOfStock ? null : (!cartItems[id]
                 ?<img className='add' onClick={() => addToCart(id)} src={assets.add_icon_white} alt="" />
                 :<div className="food-item-counter">
                         <img src={assets.remove_icon_red} onClick={()=>removeFromCart(id)} alt="" />
                         <p>{cartItems[id]}</p>
                         <img src={assets.add_icon_green} onClick={()=>addToCart(id)} alt="" />
                     </div>
-                }
+                )}
             </div>
             <div className="food-item-info">
                 <div className="food-item-name-rating">

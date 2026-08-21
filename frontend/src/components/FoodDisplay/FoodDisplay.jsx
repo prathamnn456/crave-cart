@@ -57,7 +57,7 @@ const FoodDisplay = ({ category, search, foodType = "all", setFoodType, onQuickV
       ) : (
         <div className='food-display-list'>
           {filtered.map((item) => (
-            <FoodItem key={item._id} image={item.image} name={item.name} desc={item.description} price={item.price} id={item._id} type={item.type} category={item.category} onQuickView={onQuickView} />
+            <FoodItem key={item._id} image={item.image} name={item.name} desc={item.description} price={item.price} id={item._id} type={item.type} category={item.category} available={item.available} onQuickView={onQuickView} />
           ))}
         </div>
       )}

@@ -196,3 +196,31 @@
 .row-btn svg { width: 15px; height: 15px; }
 .row-btn:hover { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 30%, var(--border)); }
 .row-btn.danger:hover { color: #E23744; border-color: color-mix(in srgb, #E23744 30%, var(--border)); }
+
+/* ---- availability ---- */
+.food-oos {
+  position: absolute; top: 10px; right: 10px; z-index: 2;
+  background: #E23744; color: #fff; font-size: 11px; font-weight: 700;
+  padding: 3px 9px; border-radius: 999px; box-shadow: 0 2px 6px rgba(0,0,0,.2);
+}
+.food-card.is-out .food-thumb img { filter: grayscale(.7) opacity(.7); }
+
+.food-stock {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);
+}
+.food-stock > span { font-size: 12.5px; color: var(--ink-2); font-weight: 500; }
+.cell-stock-label { font-size: 12.5px; color: var(--ink-2); }
+
+.switch {
+  width: 40px; height: 22px; border-radius: 999px; border: none; cursor: pointer;
+  background: var(--ink-3); position: relative; padding: 0; flex: none;
+  transition: background .15s ease;
+}
+.switch.on { background: var(--good); }
+.switch-knob {
+  position: absolute; top: 2px; left: 2px; width: 18px; height: 18px;
+  border-radius: 50%; background: #fff; transition: left .15s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,.3);
+}
+.switch.on .switch-knob { left: 20px; }

@@ -6,7 +6,8 @@ const foodSchema = new mongoose.Schema({
     price: { type: Number, required: true},
     image: { type: String, required: true },
     category:{ type:String, required:true},
-    type: { type: String, enum: ["veg", "nonveg"], default: "veg" }
+    type: { type: String, enum: ["veg", "nonveg"], default: "veg" },
+    available: { type: Boolean, default: true }
 })
 
 const foodModel = mongoose.models.food || mongoose.model("food", foodSchema);
