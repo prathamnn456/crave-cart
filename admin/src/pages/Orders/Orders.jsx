@@ -134,25 +134,61 @@ const Order = ({ search = '' }) => {
         </table>
       </div>
 
-      {mapOrder && (
-        <div className="map-overlay" onClick={() => setMapOrder(null)}>
-          <div className="map-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="map-modal-head">
-              <div>
-                <h3>Delivery location</h3>
-                <span>Order #{mapOrder._id.slice(-6).toUpperCase()} · {mapOrder.address?.firstName} {mapOrder.address?.lastName}</span>
+      {mapOrder && (() => {
+        const a = mapOrder.address || {}
+        const addressText = [a.street, a.city, a.state, a.country, a.zipcode].filter(Boolean).join(', ')
+        const mapsHref = (Number.isFinite(+a.lat) && Number.isFinite(+a.lng))
+          ? `https://www.google.com/maps/search/?api=1&query=${a.lat},${a.lng}`
+          : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressText)}`
+        return (
+          <div className="map-overlay" onClick={() => setMapOrder(null)}>
+            <div className="map-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="map-modal-head">
+                <div className="map-modal-title">
+                  <span className="map-modal-ic">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11Z" strokeLinejoin="round" /><circle cx="12" cy="10" r="2.5" /></svg>
+                  </span>
+                  <div>
+                    <h3>Delivery location</h3>
+                    <span>Order #{mapOrder._id.slice(-6).toUpperCase()}</span>
+                  </div>
+                </div>
+                <button className="map-close" onClick={() => setMapOrder(null)} aria-label="Close">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" /></svg>
+                </button>
               </div>
-              <button className="edit-close" onClick={() => setMapOrder(null)} aria-label="Close">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" /></svg>
-              </button>
+
+              <div className="map-modal-map">
+                <DeliveryMap address={mapOrder.address} height={320} />
+              </div>
+
+              <div className="map-modal-info">
+                <div className="map-info-row">
+                  <span className="map-info-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9"><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" strokeLinecap="round" /></svg></span>
+                  <div>
+                    <b>{a.firstName} {a.lastName}</b>
+                    {a.phone && <span>{a.phone}</span>}
+                  </div>
+                </div>
+                <div className="map-info-row">
+                  <span className="map-info-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11Z" strokeLinejoin="round" /><circle cx="12" cy="10" r="2.5" /></svg></span>
+                  <div>
+                    <span className="map-info-label">Delivery address</span>
+                    <p>{addressText}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="map-modal-foot">
+                <a className="btn" href={mapsHref} target="_blank" rel="noreferrer">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="15" height="15"><path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  Open in Google Maps
+                </a>
+              </div>
             </div>
-            <p className="map-modal-addr">
-              {[mapOrder.address?.street, mapOrder.address?.city, mapOrder.address?.state, mapOrder.address?.country, mapOrder.address?.zipcode].filter(Boolean).join(', ')}
-            </p>
-            <DeliveryMap address={mapOrder.address} height={320} />
           </div>
-        </div>
-      )}
+        )
+      })()}
     </div>
   )
 }

@@ -15,3 +15,22 @@
   color: var(--ink-2); font-size: 11px; padding: 3px 8px; border-radius: 6px;
   backdrop-filter: blur(4px);
 }
+
+/* ---- Leaflet control polish ---- */
+.admin-map .leaflet-bar {
+  border: none; box-shadow: 0 2px 8px rgba(0,0,0,.18); border-radius: 9px; overflow: hidden;
+}
+.admin-map .leaflet-bar a {
+  width: 30px; height: 30px; line-height: 30px;
+  background: #fff; color: #333; font-size: 17px; border: none;
+}
+.admin-map .leaflet-bar a:hover { background: #f4f4f4; color: tomato; }
+.admin-map .leaflet-control-layers {
+  border: none; border-radius: 9px; box-shadow: 0 2px 8px rgba(0,0,0,.18);
+  overflow: hidden;
+}
+.admin-map .leaflet-control-layers-expanded { padding: 8px 12px; font: inherit; font-size: 13px; color: #333; }
+.admin-map .leaflet-control-layers-expanded label { display: flex; align-items: center; gap: 6px; margin: 2px 0; cursor: pointer; }
+.admin-map .leaflet-control-attribution {
+  background: rgba(255,255,255,.82); font-size: 10px; padding: 1px 6px; border-radius: 6px 0 0 0;
+}
