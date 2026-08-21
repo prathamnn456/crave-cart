@@ -134,6 +134,9 @@ const List = () => {
           <div key={index} className='food-card'>
             <div className='food-thumb'>
               <img src={`${url}/images/` + item.image} alt={item.name} />
+              <span className='food-veg' title={item.type === 'nonveg' ? 'Non-veg' : 'Veg'}>
+                <span className={'veg-dot' + (item.type === 'nonveg' ? ' nonveg' : ' veg')}></span>
+              </span>
               <button className='food-edit' title='Edit item' onClick={() => openEdit(item)}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" strokeLinecap="round" strokeLinejoin="round" /></svg>
               </button>
@@ -142,12 +145,12 @@ const List = () => {
               </button>
             </div>
             <div className='food-body'>
-              <div className='food-row1'>
-                <b>{item.name}</b>
+              <b className='food-name'>{item.name}</b>
+              <p className='food-desc'>{item.description}</p>
+              <div className='food-foot'>
+                <span className='food-cat'>{item.category}</span>
                 <span className='food-price tnum'>{currency}{item.price}</span>
               </div>
-              <p className='food-desc'>{item.description}</p>
-              <span className='food-cat'>{item.category}</span>
             </div>
           </div>
         ))}

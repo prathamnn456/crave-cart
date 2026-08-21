@@ -58,6 +58,18 @@ const Dashboard = () => {
 
   const recent = [...orders].reverse().slice(0, 4)
 
+  // most-ordered items (by total quantity)
+  const topItems = useMemo(() => {
+    const map = {}
+    orders.forEach(o => o.items.forEach(it => {
+      map[it.name] = (map[it.name] || 0) + (Number(it.quantity) || 0)
+    }))
+    const arr = Object.entries(map).map(([name, qty]) => ({ name, qty }))
+    arr.sort((a, b) => b.qty - a.qty)
+    const max = arr.length ? arr[0].qty : 1
+    return { list: arr.slice(0, 5), max }
+  }, [orders])
+
   return (
     <div className='dashboard'>
       <div className="page-head">
@@ -141,6 +153,28 @@ const Dashboard = () => {
               </div>
             ))}
           </div>
+        </div>
+      </div>
+
+      <div className="panel top-panel">
+        <div className="panel-head">
+          <h3>Popular items</h3>
+          <Link to='/list'>Menu →</Link>
+        </div>
+        <div className="panel-body">
+          {topItems.list.length === 0 && <div className="empty">No sales yet.</div>}
+          {topItems.list.map((it, i) => (
+            <div className="toprow" key={i}>
+              <span className="toprank">{i + 1}</span>
+              <div className="topinfo">
+                <div className="topinfo-head">
+                  <b>{it.name}</b>
+                  <span>{it.qty} sold</span>
+                </div>
+                <div className="topbar"><div className="topbar-fill" style={{ width: (it.qty / topItems.max) * 100 + '%' }}></div></div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

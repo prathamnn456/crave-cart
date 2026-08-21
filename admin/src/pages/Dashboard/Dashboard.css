@@ -90,3 +90,26 @@
   .dash-tiles { grid-template-columns: repeat(2, 1fr); }
   .dash-grid { grid-template-columns: 1fr; }
 }
+
+/* ---- Popular items panel ---- */
+.top-panel { margin-top: 16px; }
+.toprow {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 0; border-top: 1px solid var(--border);
+}
+.toprow:first-child { border-top: none; }
+.toprank {
+  width: 26px; height: 26px; border-radius: 8px; flex: none;
+  background: var(--accent-soft); color: var(--accent);
+  display: grid; place-items: center; font-weight: 700; font-size: 13px;
+}
+.topinfo { flex: 1; min-width: 0; }
+.topinfo-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+.topinfo-head b { font-size: 13.5px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.topinfo-head span { font-size: 12px; color: var(--ink-3); white-space: nowrap; }
+.topbar { height: 7px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+.topbar-fill {
+  height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transition: width .4s ease;
+}

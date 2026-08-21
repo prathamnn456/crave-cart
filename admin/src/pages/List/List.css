@@ -10,12 +10,25 @@
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
-  transition: transform .15s ease;
+  transition: transform .18s ease, box-shadow .18s ease;
 }
-.food-card:hover { transform: translateY(-2px); }
+.food-card:hover { transform: translateY(-3px); box-shadow: 0 14px 32px -14px rgba(38, 32, 28, .3); }
 
-.food-thumb { position: relative; height: 130px; background: var(--surface-2); }
-.food-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.food-thumb { position: relative; height: 150px; background: var(--surface-2); overflow: hidden; }
+.food-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s ease; }
+.food-card:hover .food-thumb img { transform: scale(1.06); }
+.food-thumb::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, .18), transparent 42%);
+  pointer-events: none;
+}
+
+.food-veg {
+  position: absolute; left: 10px; top: 10px; z-index: 1;
+  width: 24px; height: 24px; border-radius: 7px;
+  background: #fff; display: grid; place-items: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .18);
+}
 .food-remove, .food-edit {
   position: absolute; top: 8px;
   width: 28px; height: 28px; border-radius: 8px;
@@ -97,19 +110,24 @@
 .edit-btn.ghost { background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--border); }
 .edit-btn:disabled { opacity: .6; cursor: default; }
 
-.food-body { padding: 13px 14px; }
-.food-row1 { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.food-row1 b { font-size: 14.5px; }
-.food-price { color: var(--accent); font-weight: 800; }
-.food-desc {
-  color: var(--ink-3); font-size: 12.5px; margin-top: 3px;
+.food-body { padding: 14px 15px 15px; }
+.food-name {
+  display: block; font-size: 15px; font-weight: 700; color: var(--ink);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.food-cat {
-  display: inline-block; margin-top: 10px;
-  font-size: 12px; color: var(--ink-2);
-  background: var(--surface-2); padding: 3px 9px; border-radius: 7px;
+.food-desc {
+  color: var(--ink-3); font-size: 12.5px; margin-top: 4px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+.food-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; margin-top: 13px;
+}
+.food-cat {
+  font-size: 12px; color: var(--ink-2);
+  background: var(--surface-2); padding: 4px 10px; border-radius: 8px;
+}
+.food-price { color: var(--accent); font-weight: 800; font-size: 16px; }
 
 /* ---- loading skeleton ---- */
 .sk {
