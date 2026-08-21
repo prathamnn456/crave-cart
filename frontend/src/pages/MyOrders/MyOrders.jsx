@@ -78,27 +78,30 @@ const MyOrders = () => {
     navigate('/cart');
   }
 
-  const fetchOrders = async () => {
-    setLoading(true);
+  const fetchOrders = async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
       const response = await axios.post(url + "/api/order/userorders", {}, { headers: { token } });
       setData(response.data.data)
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   }
 
   useEffect(() => {
-    if (token) {
-      fetchOrders();
-    }
+    if (!token) return;
+    fetchOrders();
+    // live-ish status: silently refresh every 20s while the page is open
+    const id = setInterval(() => { if (!document.hidden) fetchOrders(true); }, 20000);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token])
 
   return (
     <div className='my-orders'>
       <div className='my-orders-head'>
-        <h2>My Orders</h2>
-        <button className='my-orders-refresh' onClick={fetchOrders}>↻ Refresh</button>
+        <h2>My Orders {data.length > 0 && <span className='live-dot' title='Auto-updating'></span>}</h2>
+        <button className='my-orders-refresh' onClick={() => fetchOrders()}>↻ Refresh</button>
       </div>
 
       {loading && (
