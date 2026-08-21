@@ -13,6 +13,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Verify from './pages/Verify/Verify'
 import Favorites from './pages/Favorites/Favorites'
+import Profile from './pages/Profile/Profile'
 
 const App = () => {
 
@@ -40,6 +41,7 @@ const App = () => {
           <Route path='/order' element={<PlaceOrder />}/>
           <Route path='/myorders' element={<MyOrders />}/>
           <Route path='/favorites' element={<Favorites />}/>
+          <Route path='/profile' element={<Profile />}/>
           <Route path='/verify' element={<Verify />}/>
         </Routes>
       </div>

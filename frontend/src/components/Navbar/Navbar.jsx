@@ -68,6 +68,8 @@ const Navbar = ({ setShowLogin, setShowCart, theme, toggleTheme }) => {
           : <div className='navbar-profile'>
             <img src={assets.profile_icon} alt="" />
             <ul className='navbar-profile-dropdown'>
+              <li onClick={()=>navigate('/profile')}> <img src={assets.profile_icon} alt="" /> <p>Profile</p></li>
+              <hr />
               <li onClick={()=>navigate('/myorders')}> <img src={assets.bag_icon} alt="" /> <p>Orders</p></li>
               <hr />
               <li onClick={()=>navigate('/favorites')}> <img src={assets.bag_icon} alt="" style={{visibility:'hidden'}} /> <p>❤️ Favorites</p></li>

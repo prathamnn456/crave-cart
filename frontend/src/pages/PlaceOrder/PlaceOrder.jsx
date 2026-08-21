@@ -11,6 +11,7 @@ const PlaceOrder = () => {
 
     const [payment, setPayment] = useState("cod")
     const [loc, setLoc] = useState(null) // { lat, lng } delivery pin
+    const [savedAddrs, setSavedAddrs] = useState([])
     const [data, setData] = useState({
         firstName: "",
         lastName: "",
@@ -35,6 +36,24 @@ const PlaceOrder = () => {
         const name = event.target.name
         const value = event.target.value
         setData(data => ({ ...data, [name]: value }))
+    }
+
+    useEffect(() => {
+        if (!token) return
+        axios.post(url + '/api/user/profile', {}, { headers: { token } })
+            .then(r => { if (r.data.success) setSavedAddrs(r.data.user.addresses || []) })
+            .catch(() => { })
+    }, [token])
+
+    const applySaved = (id) => {
+        const a = savedAddrs.find(x => x.id === id)
+        if (!a) return
+        setData(d => ({
+            ...d,
+            firstName: a.firstName || '', lastName: a.lastName || '',
+            street: a.street || '', city: a.city || '', state: a.state || '',
+            zipcode: a.zipcode || '', country: a.country || '', phone: a.phone || '',
+        }))
     }
 
     const placeOrder = async (e) => {
@@ -91,6 +110,12 @@ const PlaceOrder = () => {
         <form onSubmit={placeOrder} className='place-order'>
             <div className="place-order-left">
                 <p className='title'>Delivery Information</p>
+                {savedAddrs.length > 0 && (
+                    <select className='saved-addr-select' defaultValue='' onChange={(e) => applySaved(e.target.value)}>
+                        <option value='' disabled>📍 Use a saved address…</option>
+                        {savedAddrs.map(a => <option key={a.id} value={a.id}>{a.firstName} {a.lastName} — {a.street}, {a.city}</option>)}
+                    </select>
+                )}
                 <div className="multi-field">
                     <input type="text" name='firstName' onChange={onChangeHandler} value={data.firstName} placeholder='First name' required />
                     <input type="text" name='lastName' onChange={onChangeHandler} value={data.lastName} placeholder='Last name' required />

@@ -65,4 +65,42 @@ const registerUser = async (req,res) => {
     }
 }
 
-export {loginUser, registerUser}
+// get profile (auth)
+const getProfile = async (req, res) => {
+    try {
+        const user = await userModel.findById(req.body.userId).select('name email addresses');
+        res.json({ success: true, user });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error" });
+    }
+}
+
+// save a delivery address (auth)
+const saveAddress = async (req, res) => {
+    try {
+        const user = await userModel.findById(req.body.userId);
+        const addr = { ...(req.body.address || {}), id: Date.now().toString() };
+        user.addresses = [...(user.addresses || []), addr];
+        await user.save();
+        res.json({ success: true, addresses: user.addresses, message: "Address saved" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error" });
+    }
+}
+
+// delete a saved address (auth)
+const deleteAddress = async (req, res) => {
+    try {
+        const user = await userModel.findById(req.body.userId);
+        user.addresses = (user.addresses || []).filter(a => a.id !== req.body.id);
+        await user.save();
+        res.json({ success: true, addresses: user.addresses, message: "Address removed" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error" });
+    }
+}
+
+export {loginUser, registerUser, getProfile, saveAddress, deleteAddress}
