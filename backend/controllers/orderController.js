@@ -140,6 +140,17 @@ const deleteOrder = async (req, res) => {
     }
 }
 
+// Delete all delivered orders (admin)
+const clearDelivered = async (req, res) => {
+    try {
+        const result = await orderModel.deleteMany({ status: "Delivered" });
+        res.json({ success: true, message: `Cleared ${result.deletedCount} delivered order${result.deletedCount === 1 ? '' : 's'}` });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error" });
+    }
+}
+
 const updateStatus = async (req, res) => {
     console.log(req.body);
     try {
@@ -168,4 +179,4 @@ const verifyOrder = async (req, res) => {
 
 }
 
-export { placeOrder, listOrders, userOrders, updateStatus, deleteOrder, verifyOrder, placeOrderCod }
+export { placeOrder, listOrders, userOrders, updateStatus, deleteOrder, clearDelivered, verifyOrder, placeOrderCod }

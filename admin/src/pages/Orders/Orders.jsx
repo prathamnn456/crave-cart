@@ -39,6 +39,17 @@ const Order = ({ search = '' }) => {
     }
   }
 
+  const clearDelivered = async () => {
+    const n = orders.filter(o => o.status === 'Delivered').length;
+    if (!n) return;
+    if (!window.confirm(`Delete all ${n} delivered order${n === 1 ? '' : 's'}? This can't be undone.`)) return;
+    try {
+      const res = await axios.post(`${url}/api/order/clear-delivered`, {});
+      if (res.data.success) { toast.success(res.data.message); await fetchAllOrders(); }
+      else toast.error(res.data.message || 'Could not clear');
+    } catch { toast.error('Could not clear delivered orders'); }
+  }
+
   const deleteHandler = async (order) => {
     if (!window.confirm(`Delete order #${order._id.slice(-6).toUpperCase()}? This can't be undone.`)) return;
     try {
@@ -82,7 +93,14 @@ const Order = ({ search = '' }) => {
           <h1>Orders</h1>
           <div className="sub">Track and update every order's status.</div>
         </div>
-        {!loading && <span className="head-chip">{orders.length} order{orders.length === 1 ? '' : 's'}</span>}
+        {!loading && orders.length > 0 && (
+          <div className="head-actions">
+            {counts['Delivered'] > 0 && (
+              <button className="btn ghost btn-danger" onClick={clearDelivered}>Clear delivered ({counts['Delivered']})</button>
+            )}
+            <span className="head-chip">{orders.length} order{orders.length === 1 ? '' : 's'}</span>
+          </div>
+        )}
       </div>
 
       <div className="tabs">

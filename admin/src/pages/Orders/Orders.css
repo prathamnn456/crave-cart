@@ -137,3 +137,7 @@
 
 .map-modal-foot { padding: 14px 18px; border-top: 1px solid var(--border); background: var(--surface-2); }
 .map-modal-foot .btn { width: 100%; justify-content: center; }
+
+.head-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.btn.ghost.btn-danger { color: #E23744; }
+.btn.ghost.btn-danger:hover { border-color: #E23744; color: #E23744; }
