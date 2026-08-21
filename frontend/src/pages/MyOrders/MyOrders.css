@@ -163,3 +163,12 @@
 }
 .order-map-toggle button:hover { border-color: tomato; }
 .order-map { margin-top: 12px; }
+
+/* ---- reorder ---- */
+.order-map-toggle { display: flex; flex-wrap: wrap; gap: 10px; }
+.order-reorder {
+  background: tomato; border: 1px solid tomato; color: #fff;
+  padding: 8px 14px; border-radius: 8px; font-weight: 600; font-size: 13px;
+  cursor: pointer; font-family: inherit;
+}
+.order-reorder:hover { opacity: .92; }
