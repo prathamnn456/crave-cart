@@ -14,6 +14,16 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 })
 
+const pinIcon = new L.Icon({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+})
+
 async function geocodeAddress(address) {
   const p = address || {}
   const candidates = [
@@ -77,7 +87,7 @@ const DeliveryMap = ({ address, height = 260 }) => {
             <TileLayer attribution='Tiles &copy; Esri — Source: Esri, Maxar, Earthstar Geographics' url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" maxZoom={19} />
           </LayersControl.BaseLayer>
         </LayersControl>
-        <Marker position={[pos.lat, pos.lng]}>
+        <Marker position={[pos.lat, pos.lng]} icon={pinIcon}>
           <Popup>{addressText || 'Delivery location'}</Popup>
         </Marker>
       </MapContainer>

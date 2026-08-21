@@ -14,6 +14,16 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 })
 
+const pinIcon = new L.Icon({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+})
+
 const DEFAULT = { lat: 20.5937, lng: 78.9629 } // India
 
 function ClickMarker({ pos, onChange }) {
@@ -22,6 +32,7 @@ function ClickMarker({ pos, onChange }) {
   return (
     <Marker
       draggable
+      icon={pinIcon}
       position={[pos.lat, pos.lng]}
       eventHandlers={{ dragend(e) { const m = e.target.getLatLng(); onChange({ lat: m.lat, lng: m.lng }) } }}
     />
