@@ -9,8 +9,8 @@
   gap: 14px;
   margin-bottom: 24px;
 }
-.favorites-head h1 { font-size: 28px; }
-.favorites-count { color: var(--ink-3, #64748b); font-size: 14px; }
+.favorites-head h1 { font-size: 28px; color: var(--ink); letter-spacing: -.6px; }
+.favorites-count { color: var(--ink-3); font-size: 14px; }
 
 .favorites-empty {
   text-align: center;
@@ -20,16 +20,17 @@
   align-items: center;
   gap: 8px;
 }
-.favorites-empty p { font-size: 20px; font-weight: 600; }
-.favorites-empty span { color: #64748b; }
+.favorites-empty p { font-size: 20px; font-weight: 600; color: var(--ink); }
+.favorites-empty span { color: var(--ink-3); }
 .favorites-empty button {
   margin-top: 16px;
   border: none;
-  background: tomato;
+  background: var(--accent);
   color: #fff;
   padding: 11px 22px;
   border-radius: 30px;
   font-weight: 600;
   cursor: pointer;
+  transition: background .2s;
 }
-.favorites-empty button:hover { opacity: .9; }
+.favorites-empty button:hover { background: var(--accent-hover); }

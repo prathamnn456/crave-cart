@@ -45,17 +45,17 @@
     color: var(--ink);
     box-shadow: var(--shadow);
 }
-.food-type-filter button.veg.active { color: #1B9E6A; }
-.food-type-filter button.nonveg.active { color: #E23744; }
+.food-type-filter button.veg.active { color: var(--veg); }
+.food-type-filter button.nonveg.active { color: var(--nonveg); }
 
 .veg-dot {
     width: 14px; height: 14px; border-radius: 3px;
     display: inline-grid; place-items: center;
-    border: 1.5px solid #1B9E6A; flex: none;
+    border: 1.5px solid var(--veg); flex: none;
 }
-.veg-dot::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #1B9E6A; }
-.veg-dot.nonveg { border-color: #E23744; }
-.veg-dot.nonveg::after { background: #E23744; }
+.veg-dot::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--veg); }
+.veg-dot.nonveg { border-color: var(--nonveg); }
+.veg-dot.nonveg::after { background: var(--nonveg); }
 .food-display-count {
     margin-top: 6px;
     color: var(--ink-3);

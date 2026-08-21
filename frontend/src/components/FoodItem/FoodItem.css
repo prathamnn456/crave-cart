@@ -27,16 +27,16 @@
     display: grid;
     place-items: center;
     background: var(--surface);
-    border: 2px solid #1B9E6A;
+    border: 2px solid var(--veg);
     box-shadow: 0 2px 6px rgba(0,0,0,.15);
 }
 .food-item-veg::after {
     content: '';
     width: 9px; height: 9px; border-radius: 50%;
-    background: #1B9E6A;
+    background: var(--veg);
 }
-.food-item-veg.nonveg { border-color: #E23744; }
-.food-item-veg.nonveg::after { background: #E23744; }
+.food-item-veg.nonveg { border-color: var(--nonveg); }
+.food-item-veg.nonveg::after { background: var(--nonveg); }
 .food-item-image {
     width: 100%;
     aspect-ratio: 4 / 3;
@@ -108,15 +108,15 @@
   border: none; cursor: pointer;
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(4px);
-  color: #9aa3af;
+  color: var(--ink-3);
   display: grid; place-items: center;
   box-shadow: 0 2px 8px rgba(0,0,0,.12);
   transition: transform .15s ease, color .15s ease;
   z-index: 2;
 }
 .food-item-fav svg { width: 18px; height: 18px; }
-.food-item-fav:hover { transform: scale(1.1); color: tomato; }
-.food-item-fav.active { color: tomato; }
+.food-item-fav:hover { transform: scale(1.1); color: var(--accent); }
+.food-item-fav.active { color: var(--accent); }
 
 /* ---- out of stock ---- */
 .food-item-out .food-item-image { filter: grayscale(.75) opacity(.65); }

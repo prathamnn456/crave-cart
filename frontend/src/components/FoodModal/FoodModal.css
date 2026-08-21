@@ -128,35 +128,36 @@
 }
 
 /* ---- Reviews ---- */
-.food-modal-reviews { margin-top: 22px; border-top: 1px solid #ececec; padding-top: 18px; }
-.food-modal-reviews h3 { font-size: 16px; display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-.reviews-avg { font-size: 13px; font-weight: 600; color: #f59e0b; }
+.food-modal-reviews { margin-top: 22px; border-top: 1px solid var(--border); padding-top: 18px; }
+.food-modal-reviews h3 { font-size: 16px; display: flex; align-items: center; gap: 10px; margin-bottom: 12px; color: var(--ink); }
+.reviews-avg { font-size: 13px; font-weight: 600; color: var(--star); }
 
 .review-form { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
 .review-star-picker { display: flex; gap: 4px; }
 .review-star {
   background: none; border: none; cursor: pointer; padding: 0;
-  font-size: 24px; line-height: 1; color: #d1d5db; transition: color .1s ease;
+  font-size: 24px; line-height: 1; color: var(--border); transition: color .1s ease;
 }
-.review-star.filled { color: #f59e0b; }
-.review-star:hover { color: #fbbf24; }
+.review-star.filled { color: var(--star); }
+.review-star:hover { color: var(--accent-2); }
 .review-form textarea {
-  border: 1px solid #e2e2e2; border-radius: 10px; padding: 10px 12px;
-  font-family: inherit; font-size: 14px; resize: vertical; background: #fafafa;
+  border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px;
+  font-family: inherit; font-size: 14px; resize: vertical; background: var(--surface-2); color: var(--ink);
 }
 .review-form button {
-  align-self: flex-start; border: none; background: tomato; color: #fff;
-  padding: 8px 18px; border-radius: 8px; font-weight: 600; cursor: pointer;
+  align-self: flex-start; border: none; background: var(--accent); color: #fff;
+  padding: 8px 18px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: background .2s;
 }
+.review-form button:hover:not(:disabled) { background: var(--accent-hover); }
 .review-form button:disabled { opacity: .5; cursor: default; }
-.review-signin { color: #64748b; font-size: 13.5px; margin-bottom: 14px; }
+.review-signin { color: var(--ink-3); font-size: 13.5px; margin-bottom: 14px; }
 
-.reviews-loading, .reviews-empty { color: #94a3b8; font-size: 14px; }
+.reviews-loading, .reviews-empty { color: var(--ink-3); font-size: 14px; }
 .review-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
-.review-item { border-bottom: 1px solid #f1f1f1; padding-bottom: 12px; }
+.review-item { border-bottom: 1px solid var(--border); padding-bottom: 12px; }
 .review-item:last-child { border-bottom: none; }
 .review-item-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.review-item-head b { font-size: 14px; }
-.review-item-stars { color: #f59e0b; letter-spacing: 1px; font-size: 13px; }
-.review-item-head small { color: #9aa3af; font-size: 12px; margin-left: auto; }
-.review-item p { margin-top: 5px; font-size: 13.5px; color: #475569; line-height: 1.5; }
+.review-item-head b { font-size: 14px; color: var(--ink); }
+.review-item-stars { color: var(--star); letter-spacing: 1px; font-size: 13px; }
+.review-item-head small { color: var(--ink-3); font-size: 12px; margin-left: auto; }
+.review-item p { margin-top: 5px; font-size: 13.5px; color: var(--ink-2); line-height: 1.5; }

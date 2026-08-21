@@ -31,4 +31,4 @@
   color: var(--ink-3);
 }
 
-.star-rating-new { color: #16a34a; font-weight: 600; }
+.star-rating-new { color: var(--good); font-weight: 600; }

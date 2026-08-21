@@ -1,25 +1,25 @@
 .loc-picker { display: flex; flex-direction: column; gap: 10px; }
 .loc-picker-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
 .loc-picker-head b { display: block; font-size: 15px; }
-.loc-picker-head span { display: block; font-size: 12.5px; color: #7a7a7a; margin-top: 2px; }
+.loc-picker-head span { display: block; font-size: 12.5px; color: var(--ink-3); margin-top: 2px; }
 .loc-btn {
-  flex: none; border: 1px solid tomato; background: #fff; color: tomato;
-  padding: 8px 12px; border-radius: 8px; font-weight: 600; font-size: 13px;
-  cursor: pointer; white-space: nowrap;
+  flex: none; border: 1px solid var(--accent); background: var(--surface); color: var(--accent);
+  padding: 8px 12px; border-radius: 10px; font-weight: 600; font-size: 13px;
+  cursor: pointer; white-space: nowrap; transition: background .2s, color .2s;
 }
-.loc-btn:hover:not(:disabled) { background: tomato; color: #fff; }
+.loc-btn:hover:not(:disabled) { background: var(--accent); color: #fff; }
 .loc-btn:disabled { opacity: .6; cursor: default; }
 .loc-map {
   height: 240px; width: 100%; border-radius: 12px;
-  overflow: hidden; border: 1px solid #ececec;
+  overflow: hidden; border: 1px solid var(--border);
 }
 .loc-map .leaflet-container { height: 100%; width: 100%; }
-.loc-coords { font-size: 12.5px; color: #16a34a; font-weight: 600; }
+.loc-coords { font-size: 12.5px; color: var(--good); font-weight: 600; }
 
 /* Leaflet control polish */
 .loc-map .leaflet-bar { border: none; box-shadow: 0 2px 8px rgba(0,0,0,.18); border-radius: 9px; overflow: hidden; }
 .loc-map .leaflet-bar a { width: 30px; height: 30px; line-height: 30px; color: #333; border: none; }
-.loc-map .leaflet-bar a:hover { color: tomato; }
+.loc-map .leaflet-bar a:hover { color: var(--accent); }
 .loc-map .leaflet-control-layers { border: none; border-radius: 9px; box-shadow: 0 2px 8px rgba(0,0,0,.18); }
 .loc-map .leaflet-control-layers-expanded { padding: 8px 12px; font: inherit; font-size: 13px; }
 .loc-map .leaflet-control-layers-expanded label { display: flex; align-items: center; gap: 6px; margin: 2px 0; cursor: pointer; }

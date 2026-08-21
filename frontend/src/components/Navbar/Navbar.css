@@ -183,4 +183,4 @@ display: inline-flex;
   color: inherit; display: grid; place-items: center;
 }
 .navbar-fav-icon svg { width: 22px; height: 22px; }
-.navbar-fav-icon:hover { color: tomato; }
+.navbar-fav-icon:hover { color: var(--accent); }
