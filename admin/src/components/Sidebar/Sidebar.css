@@ -27,6 +27,7 @@
   color: var(--ink-3); padding: 0 10px 8px; font-weight: 600;
 }
 .sidebar-option {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 14px;
@@ -46,6 +47,16 @@
   color: var(--accent);
   border-color: color-mix(in srgb, var(--accent) 22%, transparent);
   font-weight: 600;
+}
+.sidebar-option.active::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 0 4px 4px 0;
+  background: var(--accent);
 }
 
 .sidebar-foot {

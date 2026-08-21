@@ -5,24 +5,38 @@
   margin-bottom: 22px;
 }
 .dash-tile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 16px 18px;
+  padding: 18px;
   box-shadow: var(--shadow);
+  transition: transform .15s ease, box-shadow .15s ease;
 }
-.dash-tile .lbl {
-  font-size: 12px; color: var(--ink-2);
-  display: flex; align-items: center; gap: 7px;
+.dash-tile:hover { transform: translateY(-2px); box-shadow: 0 12px 30px -14px rgba(38, 32, 28, .3); }
+.dash-tile-ic {
+  width: 48px; height: 48px; border-radius: 14px; flex: none;
+  display: grid; place-items: center;
 }
-.dash-tile .lbl .dot { width: 8px; height: 8px; border-radius: 3px; }
-.dash-tile .val { font-size: 27px; font-weight: 800; letter-spacing: -.6px; margin-top: 8px; }
+.dash-tile-ic svg { width: 23px; height: 23px; }
+.dash-tile-ic.accent { background: var(--accent-soft); color: var(--accent); }
+.dash-tile-ic.good { background: var(--good-soft); color: var(--good); }
+.dash-tile-ic.info { background: var(--info-soft); color: var(--info); }
+.dash-tile-ic.warn { background: var(--warn-soft); color: var(--warn); }
+.dash-tile-txt { display: flex; flex-direction: column; min-width: 0; }
+.dash-tile .lbl { font-size: 12.5px; color: var(--ink-2); font-weight: 500; }
+.dash-tile .val { font-size: 25px; font-weight: 800; letter-spacing: -.6px; line-height: 1.15; margin-top: 1px; }
+.dash-tile .sub2 { font-size: 11.5px; color: var(--ink-3); margin-top: 2px; }
 
 .dash-grid {
   display: grid;
   grid-template-columns: 1.6fr 1fr;
   gap: 16px;
 }
+.dash-grid .panel { transition: box-shadow .15s ease; }
+.dash-grid .panel:hover { box-shadow: 0 12px 30px -16px rgba(38, 32, 28, .3); }
 
 .panel-head {
   display: flex; align-items: center; justify-content: space-between;
@@ -56,9 +70,12 @@
 /* recent order rows */
 .drow {
   display: flex; align-items: center; gap: 14px;
-  padding: 12px 0; border-top: 1px solid var(--border);
+  padding: 12px 10px; margin: 0 -10px; border-radius: 10px;
+  border-top: 1px solid var(--border);
+  transition: background .15s ease;
 }
 .drow:first-child { border-top: none; }
+.drow:hover { background: var(--surface-2); }
 .dbox {
   width: 40px; height: 40px; border-radius: 10px;
   background: var(--accent-soft); color: var(--accent);

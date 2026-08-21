@@ -69,20 +69,47 @@ const Dashboard = () => {
 
       <div className="dash-tiles">
         <div className="dash-tile">
-          <div className="lbl"><span className="dot" style={{ background: 'var(--accent)' }}></span>Total orders</div>
-          <div className="val tnum">{stats.total}</div>
+          <div className="dash-tile-ic accent">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M4 8l8-4 8 4-8 4-8-4Z" /><path d="M4 8v8l8 4 8-4V8" strokeLinejoin="round" /></svg>
+          </div>
+          <div className="dash-tile-txt">
+            <span className="lbl">Total orders</span>
+            <span className="val tnum">{stats.total}</span>
+            <span className="sub2">All time</span>
+          </div>
         </div>
+
         <div className="dash-tile">
-          <div className="lbl"><span className="dot" style={{ background: 'var(--good)' }}></span>Revenue</div>
-          <div className="val tnum">{currency}{stats.revenue.toLocaleString('en-IN')}</div>
+          <div className="dash-tile-ic good">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </div>
+          <div className="dash-tile-txt">
+            <span className="lbl">Revenue</span>
+            <span className="val tnum">{currency}{stats.revenue.toLocaleString('en-IN')}</span>
+            <span className="sub2">All time</span>
+          </div>
         </div>
+
         <div className="dash-tile">
-          <div className="lbl"><span className="dot" style={{ background: 'var(--info)' }}></span>Menu items</div>
-          <div className="val tnum">{stats.items}</div>
+          <div className="dash-tile-ic info">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M3 9h18M8 4v16" strokeLinecap="round" /></svg>
+          </div>
+          <div className="dash-tile-txt">
+            <span className="lbl">Menu items</span>
+            <span className="val tnum">{stats.items}</span>
+            <span className="sub2">Live on menu</span>
+          </div>
         </div>
+
         <div className="dash-tile">
-          <div className="lbl"><span className="dot" style={{ background: 'var(--warn)' }}></span>Pending</div>
-          <div className="val tnum">{stats.pending}</div>
+          <div className="dash-tile-ic warn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </div>
+          <div className="dash-tile-txt">
+            <span className="lbl">Pending</span>
+            <span className="val tnum">{stats.pending}</span>
+            <span className="sub2">Awaiting delivery</span>
+          </div>
         </div>
       </div>
 
