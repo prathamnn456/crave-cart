@@ -145,3 +145,11 @@
 @media (max-width: 860px) {
   .dash-grid2 { grid-template-columns: 1fr; }
 }
+
+/* ---- range toggle ---- */
+.range-toggle { display: inline-flex; gap: 3px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 3px; }
+.range-toggle button {
+  border: none; background: transparent; color: var(--ink-2); cursor: pointer;
+  padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; font-family: inherit;
+}
+.range-toggle button.active { background: var(--surface); color: var(--accent); box-shadow: var(--shadow); }

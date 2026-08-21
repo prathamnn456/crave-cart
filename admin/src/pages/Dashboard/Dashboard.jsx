@@ -14,6 +14,7 @@ const statusPill = (status) => {
 const Dashboard = () => {
   const [orders, setOrders] = useState([])
   const [foods, setFoods] = useState([])
+  const [range, setRange] = useState(7)
 
   useEffect(() => {
     const load = async () => {
@@ -37,14 +38,17 @@ const Dashboard = () => {
     return { total: orders.length, revenue, items: foods.length, pending }
   }, [orders, foods])
 
-  // revenue for the last 7 days
+  // revenue for the last N days (7 or 30)
   const chart = useMemo(() => {
     const days = []
     const now = new Date()
-    for (let i = 6; i >= 0; i--) {
+    for (let i = range - 1; i >= 0; i--) {
       const d = new Date(now)
       d.setDate(now.getDate() - i)
-      days.push({ key: d.toDateString(), label: d.toLocaleDateString('en-US', { weekday: 'short' }), total: 0 })
+      const label = range <= 7
+        ? d.toLocaleDateString('en-US', { weekday: 'short' })
+        : (i % 5 === 0 ? String(d.getDate()) : '')
+      days.push({ key: d.toDateString(), label, total: 0 })
     }
     orders.forEach(o => {
       const key = new Date(o.date).toDateString()
@@ -52,9 +56,33 @@ const Dashboard = () => {
       if (day) day.total += Number(o.amount) || 0
     })
     const max = Math.max(...days.map(d => d.total), 1)
-    const peak = days.reduce((p, d) => (d.total > p.total ? d : p), days[0])
-    return { days, max, peakKey: peak.key }
-  }, [orders])
+    const rangeRevenue = days.reduce((s, d) => s + d.total, 0)
+    return { days, max, rangeRevenue }
+  }, [orders, range])
+
+  const exportCSV = () => {
+    const rows = [['Order ID', 'Date', 'Customer', 'Phone', 'Items', 'Amount', 'Status', 'Coupon', 'Discount']]
+    orders.forEach(o => {
+      rows.push([
+        o._id.slice(-6).toUpperCase(),
+        new Date(o.date).toLocaleString(),
+        `${o.address?.firstName || ''} ${o.address?.lastName || ''}`.trim(),
+        o.address?.phone || '',
+        o.items.map(it => `${it.name} x${it.quantity}`).join('; '),
+        o.amount,
+        o.status,
+        o.coupon || '',
+        o.discount || 0,
+      ])
+    })
+    const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n')
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' })
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.download = `cravecart-orders-${new Date().toISOString().slice(0, 10)}.csv`
+    link.click()
+    URL.revokeObjectURL(link.href)
+  }
 
   const recent = [...orders].reverse().slice(0, 4)
 
@@ -89,6 +117,10 @@ const Dashboard = () => {
           <h1>Dashboard</h1>
           <div className="sub">Here's what's happening at CraveCart.</div>
         </div>
+        <button className="btn ghost" onClick={exportCSV} disabled={orders.length === 0}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="15" height="15"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          Export CSV
+        </button>
       </div>
 
       <div className="dash-tiles">
@@ -140,7 +172,11 @@ const Dashboard = () => {
       <div className="dash-grid">
         <div className="panel">
           <div className="panel-head">
-            <h3>Revenue — last 7 days</h3>
+            <h3>Revenue — {currency}{chart.rangeRevenue.toLocaleString('en-IN')}</h3>
+            <div className="range-toggle">
+              <button className={range === 7 ? 'active' : ''} onClick={() => setRange(7)}>7d</button>
+              <button className={range === 30 ? 'active' : ''} onClick={() => setRange(30)}>30d</button>
+            </div>
           </div>
           <RevenueChart days={chart.days} currency={currency} />
         </div>
