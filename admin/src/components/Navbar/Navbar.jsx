@@ -2,13 +2,28 @@ import React from 'react'
 import './Navbar.css'
 import { useNavigate } from 'react-router-dom'
 
-const Navbar = ({ theme, toggleTheme, onLogout }) => {
+const Navbar = ({ theme, toggleTheme, onLogout, search, setSearch, pathname }) => {
   const navigate = useNavigate();
+  const placeholder = pathname === '/orders'
+    ? 'Search orders by id, customer or item…'
+    : pathname === '/list'
+      ? 'Search menu items…'
+      : 'Search items, orders, customers…';
+  const active = pathname === '/orders' || pathname === '/list';
   return (
     <div className='navbar'>
-      <div className="navbar-search">
+      <div className={'navbar-search' + (active ? '' : ' is-idle')}>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="m20 20-3-3" strokeLinecap="round" /></svg>
-        <input placeholder='Search items, orders, customers…' />
+        <input
+          placeholder={placeholder}
+          value={search || ''}
+          onChange={(e) => setSearch && setSearch(e.target.value)}
+        />
+        {active && search && (
+          <button className='navbar-search-clear' onClick={() => setSearch('')} aria-label='Clear search'>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" /></svg>
+          </button>
+        )}
       </div>
 
       <div className="navbar-actions">

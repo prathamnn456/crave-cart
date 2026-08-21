@@ -91,8 +91,17 @@
   .dash-grid { grid-template-columns: 1fr; }
 }
 
+/* ---- bottom 2-col grid ---- */
+.dash-grid2 {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+.dash-grid2 .panel { transition: box-shadow .15s ease; }
+.dash-grid2 .panel:hover { box-shadow: 0 12px 30px -16px rgba(38, 32, 28, .3); }
+
 /* ---- Popular items panel ---- */
-.top-panel { margin-top: 16px; }
 .toprow {
   display: flex; align-items: center; gap: 14px;
   padding: 12px 0; border-top: 1px solid var(--border);
@@ -112,4 +121,27 @@
   height: 100%; border-radius: 999px;
   background: linear-gradient(90deg, var(--accent), var(--accent-2));
   transition: width .4s ease;
+}
+
+/* ---- order status breakdown ---- */
+.statusbar {
+  display: flex; height: 14px; border-radius: 999px; overflow: hidden;
+  background: var(--surface-2); margin: 6px 0 18px; gap: 2px;
+}
+.statusbar-seg { height: 100%; transition: width .4s ease; }
+.statusbar-seg.good { background: var(--good); }
+.statusbar-seg.warn { background: var(--warn); }
+.statusbar-seg.info { background: var(--info); }
+.statusbar-seg.empty { background: var(--surface-2); }
+.statuslegend { display: flex; flex-direction: column; gap: 12px; }
+.statusleg { display: flex; align-items: center; gap: 10px; font-size: 13.5px; }
+.statusdot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.statusdot.good { background: var(--good); }
+.statusdot.warn { background: var(--warn); }
+.statusdot.info { background: var(--info); }
+.statusleg-label { color: var(--ink-2); }
+.statusleg-n { margin-left: auto; font-weight: 700; color: var(--ink); }
+
+@media (max-width: 860px) {
+  .dash-grid2 { grid-template-columns: 1fr; }
 }

@@ -70,6 +70,18 @@ const Dashboard = () => {
     return { list: arr.slice(0, 5), max }
   }, [orders])
 
+  // order status breakdown
+  const statusBreak = useMemo(() => {
+    const s = { 'Food Processing': 0, 'Out for delivery': 0, 'Delivered': 0 }
+    orders.forEach(o => { s[o.status] = (s[o.status] || 0) + 1 })
+    const total = orders.length || 1
+    return [
+      { key: 'Delivered', label: 'Delivered', cls: 'good', n: s['Delivered'] },
+      { key: 'Out for delivery', label: 'Out for delivery', cls: 'warn', n: s['Out for delivery'] },
+      { key: 'Food Processing', label: 'Processing', cls: 'info', n: s['Food Processing'] },
+    ].map(x => ({ ...x, pct: (x.n / total) * 100 }))
+  }, [orders])
+
   return (
     <div className='dashboard'>
       <div className="page-head">
@@ -156,25 +168,51 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="panel top-panel">
-        <div className="panel-head">
-          <h3>Popular items</h3>
-          <Link to='/list'>Menu →</Link>
-        </div>
-        <div className="panel-body">
-          {topItems.list.length === 0 && <div className="empty">No sales yet.</div>}
-          {topItems.list.map((it, i) => (
-            <div className="toprow" key={i}>
-              <span className="toprank">{i + 1}</span>
-              <div className="topinfo">
-                <div className="topinfo-head">
-                  <b>{it.name}</b>
-                  <span>{it.qty} sold</span>
+      <div className="dash-grid2">
+        <div className="panel">
+          <div className="panel-head">
+            <h3>Popular items</h3>
+            <Link to='/list'>Menu →</Link>
+          </div>
+          <div className="panel-body">
+            {topItems.list.length === 0 && <div className="empty">No sales yet.</div>}
+            {topItems.list.map((it, i) => (
+              <div className="toprow" key={i}>
+                <span className="toprank">{i + 1}</span>
+                <div className="topinfo">
+                  <div className="topinfo-head">
+                    <b>{it.name}</b>
+                    <span>{it.qty} sold</span>
+                  </div>
+                  <div className="topbar"><div className="topbar-fill" style={{ width: (it.qty / topItems.max) * 100 + '%' }}></div></div>
                 </div>
-                <div className="topbar"><div className="topbar-fill" style={{ width: (it.qty / topItems.max) * 100 + '%' }}></div></div>
               </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="panel">
+          <div className="panel-head">
+            <h3>Order status</h3>
+            <Link to='/orders'>All →</Link>
+          </div>
+          <div className="panel-body">
+            <div className="statusbar">
+              {statusBreak.map(s => s.n > 0 && (
+                <div key={s.key} className={'statusbar-seg ' + s.cls} style={{ width: s.pct + '%' }} title={`${s.label}: ${s.n}`}></div>
+              ))}
+              {stats.total === 0 && <div className="statusbar-seg empty" style={{ width: '100%' }}></div>}
             </div>
-          ))}
+            <div className="statuslegend">
+              {statusBreak.map(s => (
+                <div className="statusleg" key={s.key}>
+                  <span className={'statusdot ' + s.cls}></span>
+                  <span className="statusleg-label">{s.label}</span>
+                  <span className="statusleg-n tnum">{s.n}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,23 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import './Orders.css'
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { url, currency } from '../../assets/assets';
 
-const statusClass = (status) => {
-  if (status === 'Delivered') return 'good'
-  if (status === 'Out for delivery') return 'warn'
-  return 'info'
-}
+const STATUSES = ['Food Processing', 'Out for delivery', 'Delivered'];
+const statusClass = (s) => s === 'Delivered' ? 'good' : s === 'Out for delivery' ? 'warn' : 'info';
+const fmtDate = (d) => new Date(d).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
 
-const fmtDate = (d) => new Date(d).toLocaleString(undefined, {
-  day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
-});
-
-const Order = () => {
+const Order = ({ search = '' }) => {
 
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [tab, setTab] = useState('All');
 
   const fetchAllOrders = async () => {
     try {
@@ -42,9 +37,25 @@ const Order = () => {
     }
   }
 
-  useEffect(() => {
-    fetchAllOrders();
-  }, [])
+  useEffect(() => { fetchAllOrders(); }, [])
+
+  const counts = useMemo(() => {
+    const c = { All: orders.length, 'Food Processing': 0, 'Out for delivery': 0, 'Delivered': 0 };
+    orders.forEach(o => { c[o.status] = (c[o.status] || 0) + 1; });
+    return c;
+  }, [orders]);
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return orders.filter(o => {
+      if (tab !== 'All' && o.status !== tab) return false;
+      if (!q) return true;
+      const cust = `${o.address?.firstName || ''} ${o.address?.lastName || ''}`.toLowerCase();
+      const items = o.items.map(i => i.name).join(' ').toLowerCase();
+      const id = o._id.slice(-6).toLowerCase();
+      return cust.includes(q) || items.includes(q) || id.includes(q);
+    });
+  }, [orders, tab, search]);
 
   return (
     <div className='order'>
@@ -53,89 +64,67 @@ const Order = () => {
           <h1>Orders</h1>
           <div className="sub">Track and update every order's status.</div>
         </div>
-        {!loading && orders.length > 0 && (
-          <span className="head-chip">{orders.length} order{orders.length === 1 ? '' : 's'}</span>
-        )}
+        {!loading && <span className="head-chip">{orders.length} order{orders.length === 1 ? '' : 's'}</span>}
       </div>
 
-      {loading ? (
-        <div className="order-list">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div className="order-card" key={i}>
-              <div className="order-card-head">
-                <div className="order-id">
-                  <span className="sk sk-box"></span>
-                  <div style={{ flex: 1 }}>
-                    <span className="sk sk-line lg"></span>
-                    <span className="sk sk-line sm" style={{ marginTop: 8 }}></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : orders.length === 0 ? (
-        <div className="order-empty">
-          <div className="order-empty-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M4 8l8-4 8 4-8 4-8-4Z" /><path d="M4 8v8l8 4 8-4V8" strokeLinejoin="round" /></svg>
-          </div>
-          <p>No orders yet</p>
-          <span>New customer orders will show up here as they come in.</span>
-        </div>
-      ) : (
-        <div className="order-list">
-          {orders.map((order) => {
-            const id6 = order._id.slice(-6).toUpperCase();
-            return (
-              <div key={order._id} className='order-card'>
-                <div className='order-card-head'>
-                  <div className='order-id'>
-                    <span className='order-box'>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><path d="M4 8l8-4 8 4-8 4-8-4Z" /><path d="M4 8v8l8 4 8-4V8" strokeLinejoin="round" /></svg>
-                    </span>
-                    <div>
-                      <b>Order #{id6}</b>
-                      <small>{fmtDate(order.date)}</small>
-                    </div>
-                  </div>
-                  <span className={'pill ' + statusClass(order.status)}>{order.status}</span>
-                </div>
+      <div className="tabs">
+        {['All', ...STATUSES].map(t => (
+          <button key={t} className={'tab' + (tab === t ? ' active' : '')} onClick={() => setTab(t)}>
+            {t}<span className="tab-count">{counts[t] || 0}</span>
+          </button>
+        ))}
+      </div>
 
-                <div className='order-card-body'>
-                  <div className='order-col'>
-                    <span className='order-col-label'>Items · {order.items.length}</span>
-                    <p className='order-items'>{order.items.map(it => `${it.name} × ${it.quantity}`).join(', ')}</p>
-                  </div>
-
-                  <div className='order-col'>
-                    <span className='order-col-label'>Deliver to</span>
-                    <p className='order-name'>{order.address.firstName} {order.address.lastName}</p>
-                    <p className='order-address'>{order.address.street}, {order.address.city}, {order.address.state}, {order.address.country} — {order.address.zipcode}</p>
-                    <p className='order-phone'>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M5 4h3l2 5-2.5 1.5a11 11 0 0 0 5 5L14 18l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" strokeLinejoin="round" /></svg>
-                      {order.address.phone}
-                    </p>
-                  </div>
-
-                  <div className='order-col order-col-right'>
-                    <span className='order-col-label'>Total</span>
-                    <span className='order-amount tnum'>{currency}{order.amount}</span>
-                    <select
-                      className={'order-status order-status-' + statusClass(order.status)}
-                      onChange={(e) => statusHandler(e, order._id)}
-                      value={order.status}
-                    >
-                      <option value="Food Processing">Food Processing</option>
-                      <option value="Out for delivery">Out for delivery</option>
-                      <option value="Delivered">Delivered</option>
-                    </select>
-                  </div>
+      <div className="panel table-wrap">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Order</th>
+              <th>Customer</th>
+              <th>Items</th>
+              <th>Amount</th>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              Array.from({ length: 6 }).map((_, i) => (
+                <tr key={i}><td colSpan={6}><div className="sk sk-line" style={{ height: 16 }}></div></td></tr>
+              ))
+            ) : filtered.length === 0 ? (
+              <tr><td colSpan={6}>
+                <div className="table-empty">
+                  <p>No orders found</p>
+                  <span>{search || tab !== 'All' ? 'Try a different search or filter.' : 'New orders will show up here.'}</span>
                 </div>
-              </div>
-            )
-          })}
-        </div>
-      )}
+              </td></tr>
+            ) : filtered.map(o => (
+              <tr key={o._id}>
+                <td><span className="cell-id">#{o._id.slice(-6).toUpperCase()}</span></td>
+                <td>
+                  <div className="cell-cust">
+                    <b>{o.address?.firstName} {o.address?.lastName}</b>
+                    <span>{o.address?.phone}</span>
+                  </div>
+                </td>
+                <td><span className="cell-items">{o.items.map(it => `${it.name} ×${it.quantity}`).join(', ')}</span></td>
+                <td><b className="tnum">{currency}{o.amount}</b></td>
+                <td className="cell-date">{fmtDate(o.date)}</td>
+                <td>
+                  <select
+                    className={'order-status order-status-' + statusClass(o.status)}
+                    value={o.status}
+                    onChange={(e) => statusHandler(e, o._id)}
+                  >
+                    {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+                  </select>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

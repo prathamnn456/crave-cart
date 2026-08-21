@@ -7,11 +7,12 @@ import { useNavigate } from 'react-router-dom';
 
 const CATEGORIES = ["Salad", "Rolls", "Deserts", "Sandwich", "Cake", "Pure Veg", "Pasta", "Noodles", "Biryani", "Pizza", "Burger", "Chicken", "Paneer", "Momos", "Thali", "Seafood", "Beverages", "Ice Cream"];
 
-const List = () => {
+const List = ({ search = '' }) => {
 
   const navigate = useNavigate();
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [view, setView] = useState('grid');
   const [editing, setEditing] = useState(null);   // item currently being edited
   const [form, setForm] = useState({ name: "", description: "", price: "", category: "Salad", type: "veg" });
   const [newImage, setNewImage] = useState(null); // optional replacement image
@@ -97,6 +98,11 @@ const List = () => {
     fetchList();
   }, [])
 
+  const q = search.trim().toLowerCase();
+  const filtered = q
+    ? list.filter(it => it.name.toLowerCase().includes(q) || (it.category || '').toLowerCase().includes(q))
+    : list;
+
   return (
     <div className='list'>
       <div className="page-head">
@@ -104,13 +110,21 @@ const List = () => {
           <h1>Menu</h1>
           <div className="sub">{list.length} item{list.length === 1 ? '' : 's'} live on CraveCart.</div>
         </div>
+        <div className="view-toggle">
+          <button className={'view-btn' + (view === 'grid' ? ' active' : '')} onClick={() => setView('grid')} title='Grid view' aria-label='Grid view'>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /></svg>
+          </button>
+          <button className={'view-btn' + (view === 'table' ? ' active' : '')} onClick={() => setView('table')} title='Table view' aria-label='Table view'>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18M3 12h18M3 18h18" strokeLinecap="round" /></svg>
+          </button>
+        </div>
       </div>
 
       {loading ? (
         <div className='menu-grid'>
           {Array.from({ length: 8 }).map((_, i) => (
             <div className='food-card' key={i}>
-              <div className='sk' style={{ height: 130 }}></div>
+              <div className='sk' style={{ height: 150 }}></div>
               <div className='food-body'>
                 <div className='sk sk-line lg'></div>
                 <div className='sk sk-line' style={{ marginTop: 8 }}></div>
@@ -128,33 +142,88 @@ const List = () => {
           <span>Add your first dish to get started.</span>
           <button onClick={() => navigate('/add')}>+ Add Item</button>
         </div>
-      ) : (
-      <div className='menu-grid'>
-        {list.map((item, index) => (
-          <div key={index} className='food-card'>
-            <div className='food-thumb'>
-              <img src={`${url}/images/` + item.image} alt={item.name} />
-              <span className='food-veg' title={item.type === 'nonveg' ? 'Non-veg' : 'Veg'}>
-                <span className={'veg-dot' + (item.type === 'nonveg' ? ' nonveg' : ' veg')}></span>
-              </span>
-              <button className='food-edit' title='Edit item' onClick={() => openEdit(item)}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              </button>
-              <button className='food-remove' title='Remove item' onClick={() => removeFood(item._id)}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" /></svg>
-              </button>
-            </div>
-            <div className='food-body'>
-              <b className='food-name'>{item.name}</b>
-              <p className='food-desc'>{item.description}</p>
-              <div className='food-foot'>
-                <span className='food-cat'>{item.category}</span>
-                <span className='food-price tnum'>{currency}{item.price}</span>
+      ) : filtered.length === 0 ? (
+        <div className='menu-empty'>
+          <div className='menu-empty-icon'>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="11" cy="11" r="7" /><path d="m20 20-3-3" strokeLinecap="round" /></svg>
+          </div>
+          <p>No items match "{search}"</p>
+          <span>Try a different search.</span>
+        </div>
+      ) : view === 'grid' ? (
+        <div className='menu-grid'>
+          {filtered.map((item) => (
+            <div key={item._id} className='food-card'>
+              <div className='food-thumb'>
+                <img src={`${url}/images/` + item.image} alt={item.name} />
+                <span className='food-veg' title={item.type === 'nonveg' ? 'Non-veg' : 'Veg'}>
+                  <span className={'veg-dot' + (item.type === 'nonveg' ? ' nonveg' : ' veg')}></span>
+                </span>
+                <button className='food-edit' title='Edit item' onClick={() => openEdit(item)}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                </button>
+                <button className='food-remove' title='Remove item' onClick={() => removeFood(item._id)}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" /></svg>
+                </button>
+              </div>
+              <div className='food-body'>
+                <b className='food-name'>{item.name}</b>
+                <p className='food-desc'>{item.description}</p>
+                <div className='food-foot'>
+                  <span className='food-cat'>{item.category}</span>
+                  <span className='food-price tnum'>{currency}{item.price}</span>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className='panel table-wrap'>
+          <table className='data-table'>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Category</th>
+                <th>Type</th>
+                <th>Price</th>
+                <th className='ta-right'>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((item) => (
+                <tr key={item._id}>
+                  <td>
+                    <div className='cell-item'>
+                      <img src={`${url}/images/` + item.image} alt={item.name} />
+                      <div>
+                        <b>{item.name}</b>
+                        <span>{item.description}</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span className='food-cat'>{item.category}</span></td>
+                  <td>
+                    <span className='cell-type'>
+                      <span className={'veg-dot' + (item.type === 'nonveg' ? ' nonveg' : ' veg')}></span>
+                      {item.type === 'nonveg' ? 'Non-veg' : 'Veg'}
+                    </span>
+                  </td>
+                  <td><b className='cell-price'>{currency}{item.price}</b></td>
+                  <td className='ta-right'>
+                    <div className='cell-actions'>
+                      <button className='row-btn' title='Edit' onClick={() => openEdit(item)}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                      </button>
+                      <button className='row-btn danger' title='Remove' onClick={() => removeFood(item._id)}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" /></svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
 
       {editing && (

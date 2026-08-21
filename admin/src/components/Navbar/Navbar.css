@@ -33,6 +33,15 @@
   position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
   width: 16px; height: 16px; color: var(--ink-3);
 }
+.navbar-search input { padding-right: 34px; }
+.navbar-search-clear {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  width: 22px; height: 22px; border-radius: 6px; border: none;
+  background: var(--surface); color: var(--ink-3); cursor: pointer;
+  display: grid; place-items: center;
+}
+.navbar-search-clear svg { position: static; transform: none; width: 13px; height: 13px; }
+.navbar-search-clear:hover { color: var(--accent); }
 
 .navbar-actions {
   margin-left: auto;

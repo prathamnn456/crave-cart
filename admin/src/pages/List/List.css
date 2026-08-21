@@ -161,3 +161,38 @@
   padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; font-family: inherit;
 }
 .menu-empty button:hover { background: var(--accent-hover); }
+
+/* ---- view toggle ---- */
+.view-toggle {
+  display: inline-flex; gap: 4px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 3px;
+}
+.view-btn {
+  width: 34px; height: 32px; border: none; background: transparent;
+  border-radius: 7px; color: var(--ink-3); cursor: pointer;
+  display: grid; place-items: center;
+}
+.view-btn svg { width: 17px; height: 17px; }
+.view-btn.active { background: var(--surface); color: var(--accent); box-shadow: var(--shadow); }
+
+/* ---- menu table cells ---- */
+.cell-item { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.cell-item img { width: 44px; height: 44px; border-radius: 9px; object-fit: cover; flex: none; }
+.data-table td .cell-item b { display: block; color: var(--ink); font-size: 13.5px; }
+.data-table td .cell-item span {
+  display: block; font-size: 12px; color: var(--ink-3);
+  max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cell-type { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--ink); }
+.data-table td b.cell-price { color: var(--accent); font-weight: 800; font-variant-numeric: tabular-nums; }
+.ta-right { text-align: right; }
+.cell-actions { display: inline-flex; gap: 8px; }
+.row-btn {
+  width: 32px; height: 32px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--ink-2); cursor: pointer; display: grid; place-items: center;
+}
+.row-btn svg { width: 15px; height: 15px; }
+.row-btn:hover { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 30%, var(--border)); }
+.row-btn.danger:hover { color: #E23744; border-color: color-mix(in srgb, #E23744 30%, var(--border)); }

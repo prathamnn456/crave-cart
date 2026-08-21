@@ -3,7 +3,7 @@ import axios from 'axios'
 import Navbar from './components/Navbar/Navbar'
 import Sidebar from './components/Sidebar/Sidebar'
 import Login from './components/Login/Login'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import Dashboard from './pages/Dashboard/Dashboard'
 import Add from './pages/Add/Add'
 import List from './pages/List/List'
@@ -19,11 +19,16 @@ const App = () => {
 
   const [theme, setTheme] = useState(() => localStorage.getItem('cc-theme') || 'light');
   const [token, setToken] = useState(storedToken || '');
+  const [search, setSearch] = useState('');
+  const location = useLocation();
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('cc-theme', theme);
   }, [theme]);
+
+  // clear the search box when moving between pages
+  useEffect(() => { setSearch(''); }, [location.pathname]);
 
   // auto-logout if the server rejects the admin token
   useEffect(() => {
@@ -61,13 +66,13 @@ const App = () => {
           <div className='app-shell'>
             <Sidebar />
             <div className="main">
-              <Navbar theme={theme} toggleTheme={toggleTheme} onLogout={handleLogout} />
+              <Navbar theme={theme} toggleTheme={toggleTheme} onLogout={handleLogout} search={search} setSearch={setSearch} pathname={location.pathname} />
               <div className="content">
                 <Routes>
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/add" element={<Add />} />
-                  <Route path="/list" element={<List />} />
-                  <Route path="/orders" element={<Orders />} />
+                  <Route path="/list" element={<List search={search} />} />
+                  <Route path="/orders" element={<Orders search={search} />} />
                 </Routes>
               </div>
             </div>
