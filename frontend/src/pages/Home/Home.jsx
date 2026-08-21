@@ -5,6 +5,7 @@ import FoodDisplay from '../../components/FoodDisplay/FoodDisplay'
 import Features from '../../components/Features/Features'
 import AppDownload from '../../components/AppDownload/AppDownload'
 import FoodModal from '../../components/FoodModal/FoodModal'
+import PromoBanner from '../../components/PromoBanner/PromoBanner'
 import useScrollReveal from '../../hooks/useScrollReveal'
 import { useContext } from 'react'
 import { StoreContext } from '../../Context/StoreContext'
@@ -22,6 +23,7 @@ const Home = () => {
 
   return (
     <>
+      <PromoBanner/>
       <Header search={search} setSearch={setSearch}/>
       <ExploreMenu setCategory={setCategory} category={category}/>
       <FoodDisplay category={category} search={search} foodType={foodType} setFoodType={setFoodType} onQuickView={setQuickItem}/>

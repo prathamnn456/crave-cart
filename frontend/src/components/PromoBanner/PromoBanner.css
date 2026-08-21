@@ -1,0 +1,16 @@
+.promo-banner {
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  background: linear-gradient(90deg, tomato, #ff8a3d);
+  color: #fff; font-size: 14px; font-weight: 500;
+  padding: 11px 44px 11px 16px; position: relative; text-align: center;
+  border-radius: 12px; margin: 0 0 8px;
+}
+.promo-banner b { font-weight: 800; letter-spacing: .3px; }
+.promo-close {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  background: rgba(255, 255, 255, .25); border: none; color: #fff;
+  width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-size: 13px;
+}
+.promo-close:hover { background: rgba(255, 255, 255, .4); }
+
+@media (max-width: 600px) { .promo-banner { font-size: 12.5px; } }

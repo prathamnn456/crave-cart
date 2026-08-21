@@ -143,6 +143,12 @@ const MyOrders = () => {
                 <span className={'order-pill ' + statusClass(order.status)}>{order.status}</span>
               </div>
 
+              {order.status !== 'Delivered' && (
+                <div className='order-eta'>
+                  🛵 Estimated delivery by {new Date(new Date(order.date).getTime() + 40 * 60000).toLocaleString(undefined, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                </div>
+              )}
+
               <div className='track'>
                 {STEPS.map((step, i) => (
                   <React.Fragment key={i}>

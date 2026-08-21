@@ -172,3 +172,10 @@
   cursor: pointer; font-family: inherit;
 }
 .order-reorder:hover { opacity: .92; }
+
+/* ---- ETA ---- */
+.order-eta {
+  margin-top: 12px; display: inline-block;
+  background: #fff4e5; color: #b45309; border: 1px solid #fde3c0;
+  font-size: 13px; font-weight: 600; padding: 7px 12px; border-radius: 8px;
+}
