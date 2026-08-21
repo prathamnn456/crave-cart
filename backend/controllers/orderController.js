@@ -129,6 +129,17 @@ const userOrders = async (req, res) => {
     }
 }
 
+// Delete an order (admin)
+const deleteOrder = async (req, res) => {
+    try {
+        await orderModel.findByIdAndDelete(req.body.orderId);
+        res.json({ success: true, message: "Order Deleted" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error" });
+    }
+}
+
 const updateStatus = async (req, res) => {
     console.log(req.body);
     try {
@@ -157,4 +168,4 @@ const verifyOrder = async (req, res) => {
 
 }
 
-export { placeOrder, listOrders, userOrders, updateStatus, verifyOrder, placeOrderCod }
+export { placeOrder, listOrders, userOrders, updateStatus, deleteOrder, verifyOrder, placeOrderCod }

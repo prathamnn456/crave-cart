@@ -39,6 +39,22 @@ const Order = ({ search = '' }) => {
     }
   }
 
+  const deleteHandler = async (order) => {
+    if (!window.confirm(`Delete order #${order._id.slice(-6).toUpperCase()}? This can't be undone.`)) return;
+    try {
+      const response = await axios.post(`${url}/api/order/delete`, { orderId: order._id });
+      if (response.data.success) {
+        toast.success('Order deleted');
+        if (mapOrder && mapOrder._id === order._id) setMapOrder(null);
+        await fetchAllOrders();
+      } else {
+        toast.error(response.data.message || 'Could not delete order');
+      }
+    } catch {
+      toast.error('Could not delete order');
+    }
+  }
+
   useEffect(() => { fetchAllOrders(); }, [])
 
   const counts = useMemo(() => {
@@ -87,7 +103,7 @@ const Order = ({ search = '' }) => {
               <th>Amount</th>
               <th>Date</th>
               <th>Status</th>
-              <th className="ta-center">Map</th>
+              <th className="ta-center">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -124,9 +140,14 @@ const Order = ({ search = '' }) => {
                   </select>
                 </td>
                 <td className="ta-center">
-                  <button className="row-btn" title="View delivery location" onClick={() => setMapOrder(o)}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11Z" strokeLinejoin="round" /><circle cx="12" cy="10" r="2.5" /></svg>
-                  </button>
+                  <div className="cell-actions">
+                    <button className="row-btn" title="View delivery location" onClick={() => setMapOrder(o)}>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11Z" strokeLinejoin="round" /><circle cx="12" cy="10" r="2.5" /></svg>
+                    </button>
+                    <button className="row-btn danger" title="Delete order" onClick={() => deleteHandler(o)}>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m2 0-1 13a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1L6 7" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
