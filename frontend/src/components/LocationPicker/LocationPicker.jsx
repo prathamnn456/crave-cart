@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './LocationPicker.css'
-import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, useMap, useMapEvents, LayersControl } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png'
@@ -60,7 +60,14 @@ const LocationPicker = ({ value, onChange }) => {
       </div>
       <div className="loc-map">
         <MapContainer center={[value?.lat || DEFAULT.lat, value?.lng || DEFAULT.lng]} zoom={value ? 15 : 4} style={{ height: '100%', width: '100%' }}>
-          <TileLayer attribution='&copy; OpenStreetMap contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          <LayersControl position="topright">
+            <LayersControl.BaseLayer checked name="Map">
+              <TileLayer attribution='&copy; OpenStreetMap contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            </LayersControl.BaseLayer>
+            <LayersControl.BaseLayer name="Satellite">
+              <TileLayer attribution='Tiles &copy; Esri — Source: Esri, Maxar, Earthstar Geographics' url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" maxZoom={19} />
+            </LayersControl.BaseLayer>
+          </LayersControl>
           <ClickMarker pos={value} onChange={onChange} />
           <Recenter pos={value} />
         </MapContainer>
