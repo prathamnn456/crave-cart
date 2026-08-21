@@ -18,7 +18,16 @@ const port = process.env.PORT || 4000;
 
 // middlewares
 app.use(express.json())
-app.use(cors())
+
+// restrict browser calls to our own sites (Vercel prod + previews) and local dev.
+// Non-browser callers (curl, Stripe webhooks) send no Origin and are allowed.
+app.use(cors({
+    origin: (origin, cb) => {
+        if (!origin) return cb(null, true);
+        if (/\.vercel\.app$/.test(origin) || /^http:\/\/localhost:\d+$/.test(origin)) return cb(null, true);
+        return cb(null, false);
+    }
+}))
 
 // db connection
 connectDB()
