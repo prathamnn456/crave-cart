@@ -1,0 +1,17 @@
+.admin-map {
+  width: 100%; border-radius: 12px; overflow: hidden;
+  border: 1px solid var(--border); position: relative;
+}
+.admin-map .leaflet-container { height: 100%; width: 100%; }
+.admin-map-msg {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; border-radius: 12px;
+  background: var(--surface-2); color: var(--ink-3); font-size: 13px;
+  border: 1px dashed var(--border);
+}
+.admin-map-note {
+  position: absolute; left: 8px; bottom: 8px; z-index: 500;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  color: var(--ink-2); font-size: 11px; padding: 3px 8px; border-radius: 6px;
+  backdrop-filter: blur(4px);
+}

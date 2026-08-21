@@ -3,6 +3,7 @@ import './MyOrders.css'
 import axios from 'axios'
 import { StoreContext } from '../../Context/StoreContext';
 import { assets } from '../../assets/assets';
+import DeliveryMap from '../../components/DeliveryMap/DeliveryMap';
 
 const STEPS = [
   { key: 'Food Processing', label: 'Order placed' },
@@ -20,6 +21,7 @@ const MyOrders = () => {
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [openMap, setOpenMap] = useState(null);
   const { url, token, currency } = useContext(StoreContext);
 
   const fetchOrders = async () => {
@@ -100,6 +102,17 @@ const MyOrders = () => {
                   </React.Fragment>
                 ))}
               </div>
+
+              <div className='order-map-toggle'>
+                <button onClick={() => setOpenMap(openMap === order._id ? null : order._id)}>
+                  {openMap === order._id ? '▲ Hide delivery location' : '📍 View delivery location'}
+                </button>
+              </div>
+              {openMap === order._id && (
+                <div className='order-map'>
+                  <DeliveryMap address={order.address} height={220} />
+                </div>
+              )}
             </div>
           )
         })}

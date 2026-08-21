@@ -153,3 +153,13 @@
     .track-node span { font-size: 11px; }
     .order-head { flex-wrap: wrap; }
 }
+
+/* ---- delivery map ---- */
+.order-map-toggle { margin-top: 16px; }
+.order-map-toggle button {
+  background: none; border: 1px solid #e2e2e2; color: tomato;
+  padding: 8px 14px; border-radius: 8px; font-weight: 600; font-size: 13px;
+  cursor: pointer; font-family: inherit;
+}
+.order-map-toggle button:hover { border-color: tomato; }
+.order-map { margin-top: 12px; }

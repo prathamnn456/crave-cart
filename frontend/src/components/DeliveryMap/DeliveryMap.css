@@ -1,0 +1,13 @@
+.delivery-map {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #ececec;
+}
+.delivery-map .leaflet-container { border-radius: 12px; font: inherit; }
+.map-msg {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; border-radius: 12px;
+  background: #f6f6f6; color: #8a8a8a; font-size: 13px;
+  border: 1px dashed #e0e0e0;
+}

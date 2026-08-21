@@ -5,10 +5,12 @@ import { assets } from '../../assets/assets';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import LocationPicker from '../../components/LocationPicker/LocationPicker';
 
 const PlaceOrder = () => {
 
     const [payment, setPayment] = useState("cod")
+    const [loc, setLoc] = useState(null) // { lat, lng } delivery pin
     const [data, setData] = useState({
         firstName: "",
         lastName: "",
@@ -46,7 +48,7 @@ const PlaceOrder = () => {
             }
         }))
         let orderData = {
-            address: data,
+            address: { ...data, ...(loc ? { lat: loc.lat, lng: loc.lng } : {}) },
             items: orderItems,
             amount: orderTotal,
             couponCode: coupon ? coupon.code : "",
@@ -104,6 +106,9 @@ const PlaceOrder = () => {
                     <input type="text" name='country' onChange={onChangeHandler} value={data.country} placeholder='Country' required />
                 </div>
                 <input type="text" name='phone' onChange={onChangeHandler} value={data.phone} placeholder='Phone' required />
+                <div className='place-order-map'>
+                    <LocationPicker value={loc} onChange={setLoc} />
+                </div>
             </div>
             <div className="place-order-right">
                 <div className="cart-total">

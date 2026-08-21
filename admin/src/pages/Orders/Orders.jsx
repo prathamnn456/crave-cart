@@ -3,6 +3,7 @@ import './Orders.css'
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { url, currency } from '../../assets/assets';
+import DeliveryMap from '../../components/DeliveryMap/DeliveryMap';
 
 const STATUSES = ['Food Processing', 'Out for delivery', 'Delivered'];
 const statusClass = (s) => s === 'Delivered' ? 'good' : s === 'Out for delivery' ? 'warn' : 'info';
@@ -13,6 +14,7 @@ const Order = ({ search = '' }) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('All');
+  const [mapOrder, setMapOrder] = useState(null);
 
   const fetchAllOrders = async () => {
     try {
@@ -85,15 +87,16 @@ const Order = ({ search = '' }) => {
               <th>Amount</th>
               <th>Date</th>
               <th>Status</th>
+              <th className="ta-center">Map</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               Array.from({ length: 6 }).map((_, i) => (
-                <tr key={i}><td colSpan={6}><div className="sk sk-line" style={{ height: 16 }}></div></td></tr>
+                <tr key={i}><td colSpan={7}><div className="sk sk-line" style={{ height: 16 }}></div></td></tr>
               ))
             ) : filtered.length === 0 ? (
-              <tr><td colSpan={6}>
+              <tr><td colSpan={7}>
                 <div className="table-empty">
                   <p>No orders found</p>
                   <span>{search || tab !== 'All' ? 'Try a different search or filter.' : 'New orders will show up here.'}</span>
@@ -120,11 +123,36 @@ const Order = ({ search = '' }) => {
                     {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
                 </td>
+                <td className="ta-center">
+                  <button className="row-btn" title="View delivery location" onClick={() => setMapOrder(o)}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11Z" strokeLinejoin="round" /><circle cx="12" cy="10" r="2.5" /></svg>
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {mapOrder && (
+        <div className="map-overlay" onClick={() => setMapOrder(null)}>
+          <div className="map-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="map-modal-head">
+              <div>
+                <h3>Delivery location</h3>
+                <span>Order #{mapOrder._id.slice(-6).toUpperCase()} · {mapOrder.address?.firstName} {mapOrder.address?.lastName}</span>
+              </div>
+              <button className="edit-close" onClick={() => setMapOrder(null)} aria-label="Close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" /></svg>
+              </button>
+            </div>
+            <p className="map-modal-addr">
+              {[mapOrder.address?.street, mapOrder.address?.city, mapOrder.address?.state, mapOrder.address?.country, mapOrder.address?.zipcode].filter(Boolean).join(', ')}
+            </p>
+            <DeliveryMap address={mapOrder.address} height={320} />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
