@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './LocationPicker.css'
+import { reverseGeocode } from '../../utils/geo'
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents, LayersControl } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -45,14 +46,23 @@ function Recenter({ pos }) {
   return null
 }
 
-const LocationPicker = ({ value, onChange }) => {
+const LocationPicker = ({ value, onChange, onAddress }) => {
   const [locating, setLocating] = useState(false)
+
+  // set the pin and, if a consumer wants it, auto-fill the address from the spot
+  const setLocation = async (pos) => {
+    onChange(pos)
+    if (onAddress) {
+      const addr = await reverseGeocode(pos.lat, pos.lng)
+      if (addr) onAddress(addr)
+    }
+  }
 
   const useMyLocation = () => {
     if (!navigator.geolocation) return alert('Location is not supported on this device.')
     setLocating(true)
     navigator.geolocation.getCurrentPosition(
-      (p) => { onChange({ lat: p.coords.latitude, lng: p.coords.longitude }); setLocating(false) },
+      (p) => { setLocation({ lat: p.coords.latitude, lng: p.coords.longitude }); setLocating(false) },
       () => { alert('Could not get your location. You can tap the map to drop a pin instead.'); setLocating(false) },
       { enableHighAccuracy: true, timeout: 10000 }
     )
@@ -79,7 +89,7 @@ const LocationPicker = ({ value, onChange }) => {
               <TileLayer attribution='Tiles &copy; Esri — Source: Esri, Maxar, Earthstar Geographics' url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" maxZoom={19} />
             </LayersControl.BaseLayer>
           </LayersControl>
-          <ClickMarker pos={value} onChange={onChange} />
+          <ClickMarker pos={value} onChange={setLocation} />
           <Recenter pos={value} />
         </MapContainer>
       </div>

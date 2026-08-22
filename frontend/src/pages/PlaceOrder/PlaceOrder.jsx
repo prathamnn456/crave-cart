@@ -45,6 +45,19 @@ const PlaceOrder = () => {
             .catch(() => { })
     }, [token])
 
+    // fill address fields from a reverse-geocoded map location
+    const applyGeoAddress = (addr) => {
+        setData(d => ({
+            ...d,
+            street: addr.street || d.street,
+            city: addr.city || d.city,
+            state: addr.state || d.state,
+            zipcode: addr.zipcode || d.zipcode,
+            country: addr.country || d.country,
+        }))
+        toast.success('Address filled from your location 📍', { toastId: 'geoaddr' })
+    }
+
     const applySaved = (id) => {
         const a = savedAddrs.find(x => x.id === id)
         if (!a) return
@@ -132,7 +145,7 @@ const PlaceOrder = () => {
                 </div>
                 <input type="text" name='phone' onChange={onChangeHandler} value={data.phone} placeholder='Phone' required />
                 <div className='place-order-map'>
-                    <LocationPicker value={loc} onChange={setLoc} />
+                    <LocationPicker value={loc} onChange={setLoc} onAddress={applyGeoAddress} />
                 </div>
             </div>
             <div className="place-order-right">
