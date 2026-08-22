@@ -76,6 +76,31 @@
 }
 .header-search-btn:hover { background: var(--accent-hover); }
 
+/* ---- search autocomplete ---- */
+.header-search-wrap { position: relative; max-width: 460px; }
+.header-suggest {
+    position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 20;
+    list-style: none; margin: 0; padding: 6px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; box-shadow: var(--shadow);
+    max-height: 320px; overflow-y: auto;
+}
+.header-suggest li {
+    display: flex; align-items: center; gap: 12px;
+    padding: 8px 10px; border-radius: 10px; cursor: pointer;
+}
+.header-suggest li:hover { background: var(--surface-2); }
+.header-suggest li img {
+    width: 40px; height: 40px; border-radius: 9px; object-fit: cover; flex: none;
+    background: var(--surface-2);
+}
+.header-suggest-name { font-weight: 600; color: var(--ink); font-size: 14.5px; }
+.header-suggest-cat {
+    margin-left: auto; font-size: 12px; color: var(--ink-3);
+    background: var(--surface-2); border: 1px solid var(--border);
+    padding: 2px 9px; border-radius: 999px; white-space: nowrap;
+}
+
 .header-popular {
     margin-top: 16px; display: flex; align-items: center; gap: 10px;
     flex-wrap: wrap; color: var(--ink-3); font-size: 14px;
