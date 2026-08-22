@@ -2,13 +2,13 @@ import React, { useContext } from 'react'
 import './Header.css'
 import { assets } from '../../assets/assets'
 import { StoreContext } from '../../Context/StoreContext'
-import useVisitorCity from '../../hooks/useVisitorCity'
+import useVisitorArea from '../../hooks/useVisitorArea'
 
 const Header = ({ search, setSearch }) => {
 
     const { userName } = useContext(StoreContext)
     const firstName = userName ? userName.trim().split(' ')[0] : ''
-    const city = useVisitorCity()
+    const area = useVisitorArea()
 
     const goToDishes = () => {
         document.getElementById('food-display')?.scrollIntoView({ behavior: 'smooth' })
@@ -27,7 +27,7 @@ const Header = ({ search, setSearch }) => {
     return (
         <div className='header'>
             <div className='header-left'>
-                <span className='header-eyebrow'><span className='header-live'></span>{city ? `Delivering in ${city} now` : 'Delivering near you now'}</span>
+                <span className='header-eyebrow'><span className='header-live'></span>{area ? `Delivering in ${area} now` : 'Delivering near you now'}</span>
                 {firstName && (
                     <p className='header-greeting'>👋 Hello <b>{firstName}</b>, welcome to CraveCart!</p>
                 )}
