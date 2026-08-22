@@ -1,8 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import './Header.css'
 import { assets } from '../../assets/assets'
+import { StoreContext } from '../../Context/StoreContext'
 
 const Header = ({ search, setSearch }) => {
+
+    const { userName } = useContext(StoreContext)
+    const firstName = userName ? userName.trim().split(' ')[0] : ''
 
     const goToDishes = () => {
         document.getElementById('food-display')?.scrollIntoView({ behavior: 'smooth' })
@@ -22,6 +26,9 @@ const Header = ({ search, setSearch }) => {
         <div className='header'>
             <div className='header-left'>
                 <span className='header-eyebrow'><span className='header-live'></span>Delivering in Chandrapur now</span>
+                {firstName && (
+                    <p className='header-greeting'>👋 Hello <b>{firstName}</b>, welcome to CraveCart!</p>
+                )}
                 <h2>Crave it.<br />We <em>deliver</em> it.</h2>
                 <p>Fresh, fast, and full of flavour — order from the best kitchens in town and let the feast come to you.</p>
 

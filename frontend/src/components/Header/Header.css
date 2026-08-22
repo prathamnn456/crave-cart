@@ -25,6 +25,16 @@
     100% { box-shadow: 0 0 0 0 transparent; }
 }
 
+.header-left .header-greeting {
+    margin-top: 14px;
+    margin-bottom: -4px;
+    font-size: max(1.15vw, 16px);
+    color: var(--ink);
+    font-weight: 600;
+    max-width: none;
+}
+.header-left .header-greeting b { color: var(--accent); font-weight: 800; }
+
 .header-left h2 {
     font-size: max(4vw, 34px);
     line-height: 1.04;

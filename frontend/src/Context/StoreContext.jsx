@@ -11,6 +11,7 @@ const StoreContextProvider = (props) => {
     const [foodLoading, setFoodLoading] = useState(true);
     const [cartItems, setCartItems] = useState({});
     const [token, setToken] = useState("")
+    const [userName, setUserName] = useState(""); // logged-in customer's name (for greeting)
     const [favorites, setFavorites] = useState([]); // array of favorited food ids
     const [ratings, setRatings] = useState({}); // foodId -> { avg, count }
     const [coupon, setCoupon] = useState(null); // { code, discount, label }
@@ -142,6 +143,21 @@ const StoreContextProvider = (props) => {
         setCartItems(response.data.cartData);
     }
 
+    // fetch the logged-in customer's name (used for the header greeting)
+    const loadProfile = async (tk) => {
+        try {
+            const res = await axios.post(url + "/api/user/profile", {}, { headers: { token: tk } });
+            if (res.data.success && res.data.user) setUserName(res.data.user.name || "");
+        } catch { /* ignore */ }
+    }
+
+    // keep the name in sync with auth: load on login, clear on logout
+    useEffect(() => {
+        if (token) loadProfile(token);
+        else setUserName("");
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [token]);
+
     const isFavorite = (id) => favorites.includes(id);
 
     const toggleFavorite = async (id) => {
@@ -195,6 +211,7 @@ const StoreContextProvider = (props) => {
         getTotalCartAmount,
         token,
         setToken,
+        userName,
         loadCartData,
         setCartItems,
         currency,
