@@ -5,13 +5,15 @@ import { useState, useEffect } from 'react'
 //     and reverse-geocodes it with OpenStreetMap Nominatim.
 //  2) Falls back to an approximate IP-based city (ipwho.is) if permission is
 //     denied or GPS is unavailable.
-// Returns '' until known so callers can show a neutral placeholder meanwhile.
+// Returns { area, coords } — area is '' until known; coords is {lat,lng} or null.
 export default function useVisitorArea() {
   const [area, setArea] = useState('')
+  const [coords, setCoords] = useState(null)
 
   useEffect(() => {
     let cancelled = false
     const set = (v) => { if (!cancelled && v) setArea(v) }
+    const setPt = (lat, lng) => { if (!cancelled && lat != null && lng != null) setCoords({ lat, lng }) }
 
     // join non-empty, de-duplicated parts into "A, B, C"
     const label = (parts) => {
@@ -26,7 +28,10 @@ export default function useVisitorArea() {
       try {
         const res = await fetch('https://ipwho.is/')
         const d = await res.json()
-        if (d && d.success) set(label([d.city, d.country]))
+        if (d && d.success) {
+          set(label([d.city, d.country]))
+          setPt(d.latitude, d.longitude)
+        }
       } catch { /* keep neutral placeholder */ }
     }
 
@@ -47,7 +52,7 @@ export default function useVisitorArea() {
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => reverseGeocode(pos.coords.latitude, pos.coords.longitude),
+        (pos) => { setPt(pos.coords.latitude, pos.coords.longitude); reverseGeocode(pos.coords.latitude, pos.coords.longitude) },
         () => ipFallback(), // permission denied or lookup error → approximate by IP
         { enableHighAccuracy: true, timeout: 8000, maximumAge: 600000 }
       )
@@ -58,5 +63,5 @@ export default function useVisitorArea() {
     return () => { cancelled = true }
   }, [])
 
-  return area
+  return { area, coords }
 }

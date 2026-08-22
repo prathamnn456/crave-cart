@@ -3,12 +3,14 @@ import './Header.css'
 import { assets } from '../../assets/assets'
 import { StoreContext } from '../../Context/StoreContext'
 import useVisitorArea from '../../hooks/useVisitorArea'
+import { haversineKm, etaFromKm, KITCHEN } from '../../utils/geo'
 
 const Header = ({ search, setSearch }) => {
 
     const { userName } = useContext(StoreContext)
     const firstName = userName ? userName.trim().split(' ')[0] : ''
-    const area = useVisitorArea()
+    const { area, coords } = useVisitorArea()
+    const eta = coords ? etaFromKm(haversineKm(KITCHEN, coords)) : null
 
     const goToDishes = () => {
         document.getElementById('food-display')?.scrollIntoView({ behavior: 'smooth' })
@@ -52,7 +54,7 @@ const Header = ({ search, setSearch }) => {
                 </div>
 
                 <div className='header-stats'>
-                    <div><b>30 min</b><span>Avg. delivery</span></div>
+                    <div><b>{eta ? `~${eta} min` : '30 min'}</b><span>{eta ? 'To your location' : 'Avg. delivery'}</span></div>
                     <div><b>4.8★</b><span>Customer rating</span></div>
                     <div><b>120+</b><span>Dishes</span></div>
                 </div>
