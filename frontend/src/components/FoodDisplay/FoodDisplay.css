@@ -15,6 +15,26 @@
     color: var(--ink);
 }
 
+/* controls row: veg/non-veg filter + sort */
+.food-display-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.food-sort {
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 9px 14px;
+    cursor: pointer;
+}
+.food-sort:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent); }
+
 /* veg / non-veg filter */
 .food-type-filter {
     display: inline-flex;
