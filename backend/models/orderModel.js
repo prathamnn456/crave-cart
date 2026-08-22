@@ -6,7 +6,8 @@ const orderSchema = new mongoose.Schema({
     amount: { type: Number, required: true},
     address:{type:Object,required:true},
     status: {type:String,default:"Food Processing"},
-    date: {type:Date,default:Date.now()},
+    // pass the function (not Date.now()) so each order is stamped at save time
+    date: {type:Date,default:Date.now},
     payment:{type:Boolean,default:false},
     coupon: {type:String,default:""},
     discount: {type:Number,default:0}
