@@ -43,6 +43,7 @@ app.use("/api/coupon",couponRouter)
 app.use("/api/favorite",favoriteRouter)
 app.use("/api/review",reviewRouter)
 
+// health check
 app.get("/", (req, res) => {
     res.send("API Working")
   });
