@@ -121,7 +121,8 @@ const listOrders = async (req, res) => {
 // User Orders for Frontend
 const userOrders = async (req, res) => {
     try {
-        const orders = await orderModel.find({ userId: req.body.userId });
+        // newest first so a just-placed order shows at the top
+        const orders = await orderModel.find({ userId: req.body.userId }).sort({ date: -1 });
         res.json({ success: true, data: orders })
     } catch (error) {
         console.log(error);
